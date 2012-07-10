@@ -52,11 +52,11 @@ public class Server {
 					.getInetAddress().getHostAddress(), port));
 			while (true) {
 				socket = server.accept();
-				loger.log(String.format("[%s][INFO] New connection from %s", Utils.getDate(), socket.getInetAddress()));
+				loger.log(String.format("[%s][INFO] New connection from %s", Utils.getDate(), socket.getInetAddress().getHostAddress()));
 				Client client = new Client(socket, sessionCounter);
 				clients.put(sessionCounter, client);
-				new Thread(client).run();
 				loger.log(String.format("[%s][INFO] Session ID of %s is %d", Utils.getDate(), client.ipaddr(), client.sessionid));
+				new Thread(client).start();
 				sessionCounter++;
 			}
 		} catch (IOException e) {
@@ -75,8 +75,8 @@ public class Server {
 		Class<? extends Server> s = this.getClass();
 		Method method;
 		try {
-			method = s.getDeclaredMethod(name, String.class);
-			method.invoke(this, cmdparam[0]);
+			method = s.getDeclaredMethod(name, Server.Client.class, String.class);
+			method.invoke(this, requester, cmdparam[1]);
 		} catch (SecurityException e) { // Boring exception handling
 			loger.log(String.format("[%s][ERROR] SecurityException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
 			loger.log(String.format("[%s][ERROR] SecurityException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
@@ -92,7 +92,23 @@ public class Server {
 		} catch (InvocationTargetException e) {
 			loger.log(String.format("[%s][ERROR] InvocationTargetException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
 			loger.log(String.format("[%s][ERROR] InvocationTargetException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
+			loger.log(String.format("[%s][ERROR] InvocationTargetException cmd: %s, params: %s", Utils.getDate(), cmdparam[0], cmdparam[1]));
 		}
+	}
+
+	// test function
+	private void cmdECHO(Client requester, String input) {
+		requester.send(String.format("INPUT: %s\n", input));
+	}
+
+	private void cmdDB(Client requester, String input) {
+		requester.send(String.format("OUTPUT: %s\n", dbhandler.test(input)));
+	}
+
+	private void cmdLOGOUT(Client requester, String input) {
+		clients.remove(requester.hashCode());
+		requester.close();
+		loger.log(String.format("[%s][INFO] Disconnection from IP Address: %s, Session ID: %d", Utils.getDate(), requester.ipaddr(), requester.sessionid));
 	}
 
 	private class Client implements Runnable {

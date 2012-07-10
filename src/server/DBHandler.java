@@ -7,14 +7,16 @@ package server;
  */
 public class DBHandler {
 	
-	private static DBHandler instance;
+	private static DBHandler instance = null;
 	
 	private DBHandler() {
 		// Bu class singleton olacak
 	}
 	
 	public static DBHandler getInstance() {
-		return instance;
+		if(instance == null)
+			instance = new DBHandler();
+		return DBHandler.instance;
 	}
 	
 	/**

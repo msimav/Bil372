@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -54,7 +56,7 @@ public class Server {
 				Client client = new Client(socket, sessionCounter);
 				clients.put(sessionCounter, client);
 				new Thread(client).run();
-				loger.log(String.format("[%s][INFO] Session ID of %s is %d", Utils.getDate(), socket.getInetAddress(), sessionCounter));
+				loger.log(String.format("[%s][INFO] Session ID of %s is %d", Utils.getDate(), client.ipaddr(), client.sessionid));
 				sessionCounter++;
 			}
 		} catch (IOException e) {
@@ -63,13 +65,33 @@ public class Server {
 	}
 
 	private void handleInput(String input, int sessionid) {
+		// Get requester class
 		Client requester;
 		requester = clients.get(sessionid);
-		if(input.equals("BYE")) {
-			requester.send("Bye bye!\n");
-			requester.close();
-		} else {
-			requester.send(input + '\n');
+		// Get cmd name and its params
+		String[] cmdparam = input.split(" ", 2);
+		String name = "cmd" + cmdparam[0]; // cmdparam[0] is cmd
+
+		Class<? extends Server> s = this.getClass();
+		Method method;
+		try {
+			method = s.getDeclaredMethod(name, String.class);
+			method.invoke(this, cmdparam[0]);
+		} catch (SecurityException e) { // Boring exception handling
+			loger.log(String.format("[%s][ERROR] SecurityException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
+			loger.log(String.format("[%s][ERROR] SecurityException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
+		} catch (NoSuchMethodException e) {
+			loger.log(String.format("[%s][ERROR] NoSuchMethodException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
+			loger.log(String.format("[%s][ERROR] NoSuchMethodException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
+		} catch (IllegalArgumentException e) {
+			loger.log(String.format("[%s][ERROR] IllegalArgumentException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
+			loger.log(String.format("[%s][ERROR] IllegalArgumentException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
+		} catch (IllegalAccessException e) {
+			loger.log(String.format("[%s][ERROR] IllegalAccessException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
+			loger.log(String.format("[%s][ERROR] IllegalAccessException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
+		} catch (InvocationTargetException e) {
+			loger.log(String.format("[%s][ERROR] InvocationTargetException in Server.handleInput: %s", Utils.getDate(), e.getMessage()));
+			loger.log(String.format("[%s][ERROR] InvocationTargetException Session ID: %d, IP Adres: %s", Utils.getDate(), requester.sessionid, requester.ipaddr()));
 		}
 	}
 
@@ -109,6 +131,10 @@ public class Server {
 			}
 		}
 
+		public String ipaddr() {
+			return this.socket.getInetAddress().getHostAddress();
+		}
+
 		@Override
 		public int hashCode() {
 			return this.sessionid;
@@ -122,6 +148,7 @@ public class Server {
 					handleInput(input, this.sessionid);
 				}
 			} catch (IOException e) {
+				// BufferedReader will throw an exception after closed, so just ignore it
 				loger.log(String.format("[%s][ERROR] IOException in Client(%d).run: %s", Utils.getDate(), sessionid, e.getMessage()));
 			}
 		}

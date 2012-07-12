@@ -6,3 +6,6 @@
 # Ignore .class files
 bin
 *.class
+
+# Ignore log file
+Server.log

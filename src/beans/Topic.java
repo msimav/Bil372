@@ -1,14 +1,12 @@
 package beans;
 
-import java.util.List;
-
 public class Topic {
 	
 	private int id;
 	private User user;
 	private String date;
 	private String title;
-	private List<Tag> tags;
+	private Tag[] tags;
 	
 	public int getId() {
 		return id;
@@ -26,7 +24,7 @@ public class Topic {
 		return date;
 	}
 	
-	public List<Tag> getTags() {
+	public Tag[] getTags() {
 		return tags;
 	}
 }

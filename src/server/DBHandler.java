@@ -1,5 +1,16 @@
 package server;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import beans.User;
+
+import util.Utils;
+
 /**
  * Bu class veritabani ile baglanti kurarak ilgili islemleri gerceklestirir
  * @author mustafa
@@ -8,9 +19,23 @@ package server;
 public class DBHandler {
 
 	private static DBHandler instance = null;
+	private Connection conn = null;
 
 	private DBHandler() {
 		// Bu class singleton olacak
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://192.168.2.140/dalga?user=lan&password=cokgizlisifre");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static DBHandler getInstance() {
@@ -27,6 +52,21 @@ public class DBHandler {
 	 * @return oturum acma gecerli ise kullanicinin idsini, degilse -1
 	 */
 	public int login(String args) {
+		User login = Utils.fromJSON(args, User.class);
+		try {
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM User WHERE email = ? AND passwd = ?");
+			pst.setString(1, login.getEmail());
+			pst.setString(2, login.getPasswd());
+
+			ResultSet rs = pst.executeQuery();
+			if(rs.next())
+				return rs.findColumn("id");
+			else
+				return -1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return -1;
 	}
 
@@ -156,7 +196,12 @@ public class DBHandler {
 	 * Bu fonsiyon veritabani baglantisini kapatir.
 	 */
 	public void close() {
-
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// Bunu test icin kullaniyorum

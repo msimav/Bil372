@@ -152,6 +152,13 @@ public class DBHandler {
 		return -1;
 	}
 
+	/**
+	 * Bu fonsiyon veritabani baglantisini kapatir.
+	 */
+	public void close() {
+
+	}
+
 	// Bunu test icin kullaniyorum
 	public String test(String testarg) {
 		return String.format("Test method returns '%s'.", testarg);

@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import util.Utils;
 
@@ -19,12 +20,20 @@ public class Server {
 
 	private static final int port = 5001; // TODO: define the port number.
 
+	private ServerSocket server;
 	private HashMap<Integer, Server.Client> clients;
 	private Loger loger;
 	private DBHandler dbhandler;
 	private int sessionCounter = 1;
 
 	public Server() {
+		// Register ShutdownHook
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				shutdown();
+			}
+		});
+
 		// Initilaze clients map
 		clients = new HashMap<Integer, Server.Client>();
 
@@ -43,7 +52,6 @@ public class Server {
 	}
 
 	public void run() {
-		ServerSocket server;
 		Socket socket;
 
 		try {
@@ -62,6 +70,35 @@ public class Server {
 		} catch (IOException e) {
 			loger.log(String.format("[%s][ERROR] IOException in Server.run: %s", Utils.getDate(), e.getMessage()));
 		}
+	}
+
+	private void shutdown() {
+		loger.log(String.format("[%s][INFO] Server is shuting down.", Utils.getDate()));
+
+		//DBHandler
+		dbhandler.close();
+		loger.log(String.format("[%s][INFO] DBHandler is closed.", Utils.getDate()));
+
+		// Clients
+		loger.log(String.format("[%s][INFO] Sending shutdown signal to Clients.", Utils.getDate()));
+		for (Iterator<Client> iterator = clients.values().iterator(); iterator.hasNext();) {
+			Client client = (Client) iterator.next();
+			client.send("SHUTDOWN Server is shuting down"); // TODO Shutdown message
+			client.close();
+		}
+
+		// ServerSocket
+		try {
+			server.close();
+			loger.log(String.format("[%s][INFO] ServerSocket is closed successfully.", Utils.getDate()));
+		} catch (IOException e) {
+			loger.log(String.format("[%s][ERROR] ServerSocket is not closed successfully.", Utils.getDate()));
+			loger.log(String.format("[%s][ERROR] IOException in Server.shutdown: %s", Utils.getDate(), e.getMessage()));
+		}
+
+		// Log
+		loger.log(String.format("[%s][INFO] Shutdown completed.", Utils.getDate()));
+		loger.closeAll();
 	}
 
 	private void handleInput(String input, int sessionid) {
@@ -144,6 +181,15 @@ public class Server {
 				socket.close();
 			} catch (IOException e) {
 				loger.log(String.format("[%s][ERROR] IOException in Client(%d).close: %s", Utils.getDate(), sessionid, e.toString()));
+			}
+		}
+
+		@Override
+		protected void finalize() throws Throwable {
+			try {
+				this.close();
+			} finally {
+				super.finalize();
 			}
 		}
 

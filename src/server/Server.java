@@ -83,7 +83,7 @@ public class Server {
 		loger.log(String.format("[%s][INFO] Sending shutdown signal to Clients.", Utils.getDate()));
 		for (Iterator<Client> iterator = clients.values().iterator(); iterator.hasNext();) {
 			Client client = (Client) iterator.next();
-			client.send("SHUTDOWN Server is shuting down"); // TODO Shutdown message
+			client.send("SHUTDOWN Server is shuting down\n"); // TODO Shutdown message
 			client.close();
 		}
 

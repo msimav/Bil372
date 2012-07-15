@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import util.Utils;
-import beans.User;
+import beans.*;
 
 public class Client {
 	// TODO tum exceptionlari duzgun bir bicimde handle et
@@ -26,8 +26,8 @@ public class Client {
 	private int sessionid;
 	private User user;
 
-	public Client(User login) {
-		user = login;
+
+	public Client() {
 		try {
 			socket = new Socket(server, port);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -53,8 +53,6 @@ public class Client {
 			});
 			listener.start();
 
-			// Login
-			send(String.format("LOGIN %s\n", Utils.toJSON(user)));
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,4 +124,40 @@ public class Client {
 		}
 	}
 
+	/***************
+	 * GUI Methods *
+	 ***************/
+
+	public void login(User login) {
+		user = login;
+		send(String.format("LOGIN %s\n", Utils.toJSON(user)));
+	}
+
+	public void register(User newuser) {
+		send(String.format("REGISTER %s\n", Utils.toJSON(newuser)));
+	}
+
+	public void createTopic(Topic newtopic) {
+		send(String.format("CREATETOPIC %s\n", Utils.toJSON(newtopic)));
+	}
+
+	public void listPrivateMessages() {
+		send(String.format("LSPM %s\n", Utils.toJSON(this.user)));
+	}
+
+	public void showConversation(User friend) {
+		// (me, friend) tuple seklinde gonderilecek request
+		User[] tuple = new User[2];
+		tuple[0] = this.user;
+		tuple[1] = friend;
+		send(String.format("GETCONVERSATION %s\n", Utils.toJSON(tuple)));
+	}
+
+	public void createPost(Post newpost) {
+		send(String.format("CREATEPOST %s\n", Utils.toJSON(newpost)));
+	}
+
+	public void sendPrivateMessage(PrivateMessage newpm) {
+		send(String.format("SENDPM %s\n", Utils.toJSON(newpm)));
+	}
 }

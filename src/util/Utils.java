@@ -56,4 +56,14 @@ public class Utils {
 		T data = converter.fromJson(json, classOfT);
 		return data;
 	}
+	
+	/**
+	 * Database'in resim olarak byte arrayi donmesini saglayan fonksiyon.
+	 * Path degiskeni aldigi icin istenen resim serverda bulunmalidir.
+	 * @param path byte arrayine cevrilecek resim
+	 * @return resmin byte arrayi
+	 */
+	public static byte[] getAvatar(String path){
+		return null; // TODO implement it
+	}
 }

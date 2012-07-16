@@ -33,7 +33,7 @@ public class Client {
 	public Client() {
 		// Initilaze GUI
 		gui = new WindowHandler();
-		
+
 		try {
 			// Connnet to server
 			socket = new Socket(server, port);
@@ -97,9 +97,13 @@ public class Client {
 		}
 
 	}
-	
+
 	public WindowHandler getWindowHandler() {
 		return gui;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	private void send(String arg) {
@@ -178,7 +182,12 @@ public class Client {
 
 	public void listTopics() {
 		// User'in gorebildigi topicleri listelemek icin user parametresi gonder
-		send(String.format("LSPM %s\n", Utils.toJSON(this.user)));
+		send(String.format("LSTOPIC %s\n", Utils.toJSON(this.user)));
+	}
+
+	public void listUsers() {
+		// Kendi disindaki userlarin listesini doner
+		send(String.format("LSUSER %s\n", Utils.toJSON(this.user)));
 	}
 
 	public void disconnect() {

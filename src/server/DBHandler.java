@@ -55,7 +55,7 @@ public class DBHandler {
 
 			ResultSet rs = pst.executeQuery();
 			if(rs.next())
-				return new User();
+				return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), null, null);
 			else
 				return null;
 		} catch (SQLException e) {

@@ -32,7 +32,7 @@ public class Client {
 
 	public Client() {
 		// Initilaze GUI
-		gui = new WindowHandler();
+		gui = new WindowHandler(this);
 
 		try {
 			// Connnet to server

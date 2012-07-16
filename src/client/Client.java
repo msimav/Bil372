@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import client.gui.WindowHandler;
+
 import util.Utils;
 import beans.*;
 
@@ -25,10 +27,15 @@ public class Client {
 	private Socket socket;
 	private int sessionid;
 	private User user;
+	private WindowHandler gui;
 
 
 	public Client() {
+		// Initilaze GUI
+		gui = new WindowHandler();
+		
 		try {
+			// Connnet to server
 			socket = new Socket(server, port);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -89,6 +96,10 @@ public class Client {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public WindowHandler getWindowHandler() {
+		return gui;
 	}
 
 	private void send(String arg) {

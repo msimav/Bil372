@@ -160,4 +160,21 @@ public class Client {
 	public void sendPrivateMessage(PrivateMessage newpm) {
 		send(String.format("SENDPM %s\n", Utils.toJSON(newpm)));
 	}
+
+	public void listPosts(Topic topic) {
+		send(String.format("LSPOST %s\n", Utils.toJSON(topic)));
+	}
+
+	public void listTopics() {
+		// User'in gorebildigi topicleri listelemek icin user parametresi gonder
+		send(String.format("LSPM %s\n", Utils.toJSON(this.user)));
+	}
+
+	public void disconnect() {
+		send(String.format("DISCONNECT %d\n", sessionid));
+	}
+
+	public void reconnect() {
+		send(String.format("RECONNECT %d\n", sessionid));
+	}
 }

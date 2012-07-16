@@ -5,7 +5,8 @@ public class User {
 	private int id;
 	private String name;
 	private String email;
-	//private String avatar; TODO: avatar'in nasil handle edilecegi sonradan kararlastirilacak
+	private String passwd;
+	private byte[] avatar;
 	
 	public String getName() {
 		return name;
@@ -19,4 +20,11 @@ public class User {
 		return email;
 	}
 	
+	public String getPasswd() {
+		return passwd;
+	}
+	
+	public byte[] getAvatar() {
+		return avatar;
+	}
 }

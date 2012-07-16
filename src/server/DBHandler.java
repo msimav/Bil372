@@ -1,5 +1,12 @@
 package server;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import beans.*;
+
 /**
  * Bu class veritabani ile baglanti kurarak ilgili islemleri gerceklestirir
  * @author mustafa
@@ -8,9 +15,23 @@ package server;
 public class DBHandler {
 
 	private static DBHandler instance = null;
+	private Connection conn = null;
 
 	private DBHandler() {
 		// Bu class singleton olacak
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://192.168.2.140/dalga?user=lan&password=cokgizlisifre");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static DBHandler getInstance() {
@@ -26,8 +47,22 @@ public class DBHandler {
 	 * 			Ornegin {"username": "msimav", "passwd": "cokgizlisifre"} gibi
 	 * @return oturum acma gecerli ise kullanicinin idsini, degilse -1
 	 */
-	public int login(String args) {
-		return -1;
+	public User login(User login) {
+		try {
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM User WHERE email = ? AND passwd = ?");
+			pst.setString(1, login.getEmail());
+			pst.setString(2, login.getPasswd());
+
+			ResultSet rs = pst.executeQuery();
+			if(rs.next())
+				return new User();
+			else
+				return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -39,7 +74,7 @@ public class DBHandler {
 	 * 			{"kullaniciID": 32, "kullaniciAdi": "msimav"} seklinde
 	 * 			degilse null
 	 */
-	public String register(String args) {
+	public User register(User newuser) {
 		return null;
 	}
 
@@ -55,7 +90,7 @@ public class DBHandler {
 	 * 			* title
 	 * 			* postCount (topic altindaki postlari sayiverin bi zahmet :) )
 	 */
-	public String getTopicList(String args) {
+	public Topic[] getTopicList(User user) {
 		return null;
 	}
 
@@ -69,7 +104,7 @@ public class DBHandler {
 	 * 			* post
 	 * 			* replyId
 	 */
-	public String getPost(String args) {
+	public Post[] getPost(Topic topic) {
 		return null;
 	}
 
@@ -82,8 +117,8 @@ public class DBHandler {
 	 * 			* post
 	 * @return baslik acma basarili veya degil 1/0
 	 */
-	public int createTopic(String args) {
-		return -1;
+	public Topic createTopic(Topic newtopic) {
+		return null;
 	}
 
 	/**
@@ -95,8 +130,8 @@ public class DBHandler {
 	 * 			* replyId
 	 * @return mesaj atma islemi basarili ise 1 degilse 0
 	 */
-	public int createPost(String args) {
-		return -1;
+	public Post createPost(Post newpost) {
+		return null;
 	}
 
 	/**
@@ -108,7 +143,7 @@ public class DBHandler {
 	 * 			* email
 	 * 			* avatar (bu kisim sorun cikarabilir bu kismi implement etmeyi sona birakabilirsiniz)
 	 */
-	public String userList(String args) {
+	public User[] userList() {
 		return null;
 	}
 
@@ -121,8 +156,8 @@ public class DBHandler {
 	 * 			* message
 	 * @return basarili 1/ basarisiz 0
 	 */
-	public int sendPM(String args) {
-		return -1;
+	public PrivateMessage sendPM(PrivateMessage newpm) {
+		return null;
 	}
 
 	/**
@@ -135,8 +170,8 @@ public class DBHandler {
 	 * 			* message: bu kullanicinin son gonderdigi mesaj 
 	 * 			* avatar: mesaji gonderen kullanicinin avatari 
 	 */
-	public int getPMs(String args) {
-		return -1;
+	public PrivateMessage[] getPMs(User user) {
+		return null;
 	}
 
 	/**
@@ -148,15 +183,20 @@ public class DBHandler {
 	 * 			* friendid: konustugum arkadasimin idsi
 	 * @return
 	 */
-	public int getPMdetails(String args) {
-		return -1;
+	public PrivateMessage[] getPMdetails(User me, User friend) {
+		return null;
 	}
 
 	/**
 	 * Bu fonsiyon veritabani baglantisini kapatir.
 	 */
 	public void close() {
-
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// Bunu test icin kullaniyorum

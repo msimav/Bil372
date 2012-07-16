@@ -143,7 +143,7 @@ public class DBHandler {
 	 * 			* email
 	 * 			* avatar (bu kisim sorun cikarabilir bu kismi implement etmeyi sona birakabilirsiniz)
 	 */
-	public User[] userList() {
+	public User[] userList(User user) {
 		return null;
 	}
 

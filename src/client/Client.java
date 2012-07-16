@@ -191,7 +191,7 @@ public class Client {
 	}
 
 	public void disconnect() {
-		send(String.format("DISCONNECT %d\n", sessionid));
+		send(String.format("LOGOUT %d\n", sessionid));
 	}
 
 	public void reconnect() {

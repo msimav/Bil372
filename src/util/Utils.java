@@ -1,7 +1,16 @@
 package util;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import com.google.gson.Gson;
 
@@ -65,7 +74,66 @@ public class Utils {
 	 * @return resmin byte arrayi
 	 */
 	public static byte[] getAvatar(String path){
-		return null; // TODO implement it
+		byte[] imageInByte = null;
+
+		try {
+
+			BufferedImage originalImage = ImageIO.read(new File(path));
+			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+
+			//yeniden boyutlandirilma islemi
+			BufferedImage resizedImage = Utils.resizeImage(originalImage,type);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(resizedImage, "jpg", baos);
+			baos.flush();
+			imageInByte = baos.toByteArray();
+			baos.close();
+
+
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return imageInByte;
+	}
+
+	/**
+	 * Parametre olarak aldigi stringi cozumleyip ImageIcon a donusturur, JSON formati ile return eder.
+	 * @param JSON formatli string
+	 * @return JSON formatli string
+	 */
+	public static ImageIcon byteTOImage(byte[] imageInByte) {
+
+		InputStream in = new ByteArrayInputStream(imageInByte);
+		BufferedImage bImageFromConvert = null;
+
+		try {
+			bImageFromConvert = ImageIO.read(in);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+		ImageIcon image = new ImageIcon(bImageFromConvert);
+
+		return image;
+
+	}
+
+	/**
+	 * Parametre olarak aldigi byte array i ImageIcon' a donusturur.
+	 * @param byte array
+	 * @return ImageIcon
+	 */
+	private static BufferedImage resizeImage(BufferedImage originalImage, int type){
+
+		BufferedImage resizedImage = new BufferedImage(64, 64, type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, 64, 64, null);
+		g.dispose();
+
+		return resizedImage;
 	}
 
 	/**

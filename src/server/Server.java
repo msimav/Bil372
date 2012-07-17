@@ -141,114 +141,157 @@ public class Server {
 
 	@SuppressWarnings("unused")
 	private void cmdLOGIN(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LOGIN] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User login = Utils.fromJSON(input, User.class);
 		User response = dbhandler.login(login);
+		String proResponse;
 		if(response == null)
-			requester.send("LOGIN -1 Login Error\n");
+			proResponse = "LOGIN -1 Login Error\n";
 		else
-			requester.send(String.format("LOGIN %d %s\n", requester.sessionid, Utils.toJSON(response)));
+			proResponse = String.format("LOGIN %d %s\n", requester.sessionid, Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][LOGIN] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdREGISTER(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][REGISTER] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User newuser = Utils.fromJSON(input, User.class);
 		User response = dbhandler.register(newuser);
+		String proResponse;
 		if(response == null)
-			requester.send("REGISTER -1 Register Failed\n");
+			proResponse ="REGISTER -1 Register Failed\n";
 		else
-			requester.send(String.format("REGISTER 0 %s\n", Utils.toJSON(response)));
+			proResponse = String.format("REGISTER 0 %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][REGISTER] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdCREATETOPIC(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][CREATETOPIC] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		Topic newtopic = Utils.fromJSON(input, Topic.class);
 		Topic response = dbhandler.createTopic(newtopic);
-		if(response == null)
-			requester.send("ERROR Topic creation failed\n"); // TODO review it
+		if(response == null) {
+			loger.log(String.format("[%s][PROTOCOL][CREATETOPIC] Requester: %s(%d), Response: ERROR\n", Utils.getDate(), requester.ipaddr(), requester.sessionid));
+			requester.send("ERROR Topic creation failed\n");
+		}
 		else {
+			String proBroadcast = String.format("NEWTOPIC %s\n", Utils.toJSON(response));
+			loger.log(String.format("[%s][PROTOCOL][CREATETOPIC] Requester: %s(%d), Broadcast: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proBroadcast));
 			for (Iterator<Client> iterator = clients.values().iterator(); iterator.hasNext();) {
 				Client client = (Client) iterator.next();
-				client.send(String.format("NEWTOPIC %s\n", Utils.toJSON(response)));
+				client.send(proBroadcast);
 			}
 		}
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdLSPM(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LSPM] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User user = Utils.fromJSON(input, User.class);
 		PrivateMessage[] response = dbhandler.getPMs(user);
+		String proResponse;
 		if(response == null)
-			requester.send("LSPM []\n");
+			proResponse = "LSPM []\n";
 		else
-			requester.send(String.format("LSPM %s\n", Utils.toJSON(response)));
+			proResponse = String.format("LSPM %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][LSPM] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdGETCONVERSATION(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][GETCONVERSATION] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User[] tuple = Utils.fromJSON(input, User[].class);
 		PrivateMessage[] response = dbhandler.getPMdetails(tuple[0], tuple[1]);
+		String proResponse;
 		if(response == null)
-			requester.send("GETCONVERSATION []\n");
+			proResponse = "GETCONVERSATION []\n";
 		else
-			requester.send(String.format("GETCONVERSATION %s\n", Utils.toJSON(response)));
+			proResponse = String.format("GETCONVERSATION %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][GETCONVERSATION] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdCREATEPOST(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][CREATEPOST] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		Post newpost = Utils.fromJSON(input, Post.class);
 		Post response = dbhandler.createPost(newpost);
-		if(response == null)
+		if(response == null) {
+			loger.log(String.format("[%s][PROTOCOL][CREATEPOST] Requester: %s(%d), Response: ERROR\n", Utils.getDate(), requester.ipaddr(), requester.sessionid));
 			requester.send("ERROR Error occured while sending topic");
+		}
 		else {
+			String proBroadcast = String.format("NEWPOST %s\n", Utils.toJSON(response));
+			loger.log(String.format("[%s][PROTOCOL][CREATEPOST] Requester: %s(%d), Broadcast: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proBroadcast));
 			for (Iterator<Client> iterator = clients.values().iterator(); iterator.hasNext();) {
 				Client client = (Client) iterator.next();
-				client.send(String.format("NEWPOST %s\n", Utils.toJSON(response)));
+				client.send(proBroadcast);
 			}
 		}
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdSENDPM(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][SENDPM] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		PrivateMessage newpm = Utils.fromJSON(input, PrivateMessage.class);
 		PrivateMessage response = dbhandler.sendPM(newpm);
+		String proResponse;
 		if(response == null)
-			requester.send("ERROR Private Message couldn't be sent\n");
+			proResponse = "ERROR Private Message couldn't be sent\n";
 		else
-			requester.send("SUCCESS Private Message has been sent\n");
+			proResponse = "SUCCESS Private Message has been sent\n";
+		loger.log(String.format("[%s][PROTOCOL][SENDPM] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdLSPOST(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LSPOST] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		Topic topic = Utils.fromJSON(input, Topic.class);
 		Post[] response = dbhandler.getPost(topic);
+		String proResponse;
 		if(response == null) // boyle bir sey mumkun degil
-			requester.send("ERROR nasil bir hataya dustun sen reyiz\n");
+			proResponse = "ERROR nasil bir hataya dustun sen reyiz\n";
 		else
-			requester.send(String.format("LSPOST %s\n", Utils.toJSON(response)));
+			proResponse = String.format("LSPOST %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][LSPOST] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdLSTOPIC(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LSTOPIC] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User user = Utils.fromJSON(input, User.class);
 		Topic[] response = dbhandler.getTopicList(user);
+		String proResponse;
 		if(response == null)
-			requester.send("ERROR There is no topic created.\n");
+			proResponse = "ERROR There is no topic created.\n";
 		else
-			requester.send(String.format("LSTOPIC %s\n", Utils.toJSON(response)));
+			proResponse = String.format("LSTOPIC %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][LSTOPIC] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdLSUSER(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LSUSER] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		User user = Utils.fromJSON(input, User.class);
 		User[] response = dbhandler.userList(user); // TODO userlist degisecek
+		String proResponse;
 		if(response == null)
-			requester.send("ERROR You are the only user in the whole universe");
+			proResponse = "ERROR You are the only user in the whole universe";
 		else
-			requester.send(String.format("LSUSER %s\n", Utils.toJSON(response)));
+			proResponse = String.format("LSUSER %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][LSUSER] Requester: %s(%d), Response: %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	@SuppressWarnings("unused")
 	private void cmdLOGOUT(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][LOGOUT] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		clients.remove(requester.hashCode());
 		requester.close();
 		loger.log(String.format("[%s][INFO] Disconnection from IP Address: %s, Session ID: %d", Utils.getDate(), requester.ipaddr(), requester.sessionid));
@@ -256,6 +299,7 @@ public class Server {
 
 	@SuppressWarnings("unused")
 	private void cmdRECONNECT(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][RECONNECT] Requester: %s(%d), Input %s\n", Utils.getDate(), requester.ipaddr(), requester.sessionid, input));
 		int session = Integer.parseInt(input);
 		// Close and remove the old client
 		clients.get(session).close();
@@ -266,7 +310,7 @@ public class Server {
 		clients.remove(requester.hashCode());
 		// Replace new session id with the old one
 		requester.sessionid = session;
-		requester.send(String.format("RECONNECT %s\n", session));
+		requester.send(String.format("RECONNECT %s\n", session)); // TODO RECONNECT protocol needs more review
 	}
 
 	private class Client implements Runnable {

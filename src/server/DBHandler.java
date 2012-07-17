@@ -169,7 +169,7 @@ ordan ismine ulasin)
 		ArrayList<Post> arrayL = new ArrayList<Post>();
 		Post [] diziP = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM post WHERE	topicid = ?");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE topicid = ?");
 			pst.setInt(1, topic.getId());
 
 			ResultSet rs = pst.executeQuery();

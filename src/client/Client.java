@@ -197,4 +197,84 @@ public class Client {
 	public void reconnect() {
 		send(String.format("RECONNECT %d\n", sessionid));
 	}
+
+	/********************
+	 * Protocol Methods *
+	 ********************/
+
+	@SuppressWarnings("unused")
+	private void cmdLOGIN(String input) {
+		String[] sesionAndUser = input.split(" ", 2);
+		int session = Integer.parseInt(sesionAndUser[0]);
+		if(session == -1)
+			gui.loginDenied(sesionAndUser[1]);
+		else {
+			this.user = Utils.fromJSON(sesionAndUser[1], User.class);
+			this.sessionid = session;
+			gui.loginAccepted();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdREGISTER(String input) {
+		String[] response = input.split(" ", 2);
+		int code = Integer.parseInt(response[0]);
+		if(code == -1)
+			gui.registerFailed(response[1]);
+		else {
+			gui.registerSuccess(Utils.fromJSON(response[1], User.class));
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdNEWTOPIC(String input) {
+		Topic newtopic = Utils.fromJSON(input, Topic.class);
+		gui.appendTopic(newtopic);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdLSPM(String input) {
+		PrivateMessage[] pmlist = Utils.fromJSON(input, PrivateMessage[].class);
+		gui.showMessages(pmlist);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdGETCONVERSATION(String input) {
+		PrivateMessage[] conv = Utils.fromJSON(input, PrivateMessage[].class);
+		gui.showConversation(conv);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdNEWPOST(String input) {
+		Post newpost = Utils.fromJSON(input, Post.class);
+		gui.newPost(newpost);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdLSPOST(String input) {
+		Post[] postList = Utils.fromJSON(input, Post[].class);
+		gui.showPosts(postList);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdLSTOPIC(String input) {
+		Topic[] topicList = Utils.fromJSON(input, Topic[].class);
+		gui.showTopicList(topicList);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdLSUSER(String input) {
+		User[] userList = Utils.fromJSON(input, User[].class);
+		gui.listUsers(userList);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdERROR(String input) {
+		gui.showError(input);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdSUCCCESS(String input) {
+		gui.showSuccess(input);
+	}
 }

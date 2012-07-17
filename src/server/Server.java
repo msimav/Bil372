@@ -156,7 +156,7 @@ public class Server {
 		if(response == null)
 			requester.send("REGISTER -1 Register Failed\n");
 		else
-			requester.send(String.format("REGISTER %s\n", Utils.toJSON(response)));
+			requester.send(String.format("REGISTER 0 %s\n", Utils.toJSON(response)));
 	}
 
 	@SuppressWarnings("unused")
@@ -214,7 +214,7 @@ public class Server {
 		if(response == null)
 			requester.send("ERROR Private Message couldn't be sent\n");
 		else
-			requester.send("SUCCES Private Message has been sent\n");
+			requester.send("SUCCESS Private Message has been sent\n");
 	}
 
 	@SuppressWarnings("unused")

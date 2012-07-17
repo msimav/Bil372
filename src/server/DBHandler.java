@@ -111,7 +111,7 @@ public class DBHandler {
 			pst.setString(3, newuser.getPasswd());
 			pst.setString(4, "default");
 			// TODO default olan kisma resim eklencek
-
+			pst.executeUpdate();
 			return newuser;
 		}catch(Exception e){
 			e.getStackTrace();

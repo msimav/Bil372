@@ -1,6 +1,5 @@
 package server;
 
-import java.awt.Point;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -174,8 +173,17 @@ ordan ismine ulasin)
 
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
+				Post reply = null;
+				if(rs.getInt("post.reply") != -1) {
+					PreparedStatement replyrst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE post.id = ?");
+					replyrst.setInt(1, rs.getInt("post.reply"));
+					ResultSet replyrs = replyrst.executeQuery();
+					replyrs.next(); //there is just one row returned
+					User postUser = new User(replyrs.getInt("user.id"), replyrs.getString("user.name"), null, null, null);
+					reply = new Post(replyrs.getInt("post.id"), postUser, null, replyrs.getDate("post.date").toString(), replyrs.getString("post.post"), null);
+				}
 				User postUser = new User(rs.getInt("user.id"), rs.getString("user.name"), rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar")));
-				arrayL.add(new Post(rs.getInt("post.id"), postUser, topic, rs.getDate("post.date").toString(), rs.getString("post.post"), null));
+				arrayL.add(new Post(rs.getInt("post.id"), postUser, topic, rs.getDate("post.date").toString(), rs.getString("post.post"), reply));
 				//TODO utils.get avatar
 			}
 		}catch(Exception e){

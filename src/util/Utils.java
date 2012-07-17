@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import java.util.Date;
 
 import com.google.gson.Gson;
@@ -56,7 +57,7 @@ public class Utils {
 		T data = converter.fromJson(json, classOfT);
 		return data;
 	}
-	
+
 	/**
 	 * Database'in resim olarak byte arrayi donmesini saglayan fonksiyon.
 	 * Path degiskeni aldigi icin istenen resim serverda bulunmalidir.
@@ -65,5 +66,20 @@ public class Utils {
 	 */
 	public static byte[] getAvatar(String path){
 		return null; // TODO implement it
+	}
+
+	/**
+	 * Bir dosyanin uzantisini almak icin kullanilir
+	 * @param file uzantisi alinacak dosya
+	 * @return dosyanin uzantisi
+	 */
+	public static String getExtension(File file) {
+		String name = file.getName();
+		int index = name.lastIndexOf('.');
+
+		if(index > 0 && index < name.length() -1)
+			return name.substring(index + 1).toLowerCase();
+		else
+			return null;
 	}
 }

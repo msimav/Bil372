@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -20,8 +21,17 @@ public class Utils {
 	 * O anki tarihi doner. Loglama yaparken kullanilir
 	 * @return
 	 */
-	public static String getDate() {
+	public static String getDateTime() {
 		return new Date().toString();
+	}
+	
+	/**
+	 * O anki tarihi doner ve VERITABANI tarafindan kullanilir.
+	 * @return
+	 */
+	public static String getDate() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+		return formatter.format(new Date());
 	}
 
 	/**

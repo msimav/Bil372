@@ -143,7 +143,7 @@ ordan ismine ulasin)
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
 				User topicUser = new User(rs.getInt("user.id"), rs.getString("user.name") , rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar")));
-				arrayL.add(new Topic(rs.getInt("topic.id"), topicUser, rs.getDate("topic.date").toString(), rs.getString("topic.title"), null, null));
+				arrayL.add(new Topic(rs.getInt("topic.id"), topicUser, rs.getTimestamp("topic.date").toString(), rs.getString("topic.title"), null, null));
 				//TODO utils.get avatar , tagleri getir
 			}
 		}catch(Exception e){
@@ -168,7 +168,7 @@ ordan ismine ulasin)
 		ArrayList<Post> arrayL = new ArrayList<Post>();
 		Post [] diziP = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE topicid = ?");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE topicid = ? ORDER by post.date DESC");
 			pst.setInt(1, topic.getId());
 
 			ResultSet rs = pst.executeQuery();
@@ -183,7 +183,7 @@ ordan ismine ulasin)
 					reply = new Post(replyrs.getInt("post.id"), postUser, null, replyrs.getDate("post.date").toString(), replyrs.getString("post.post"), null);
 				}
 				User postUser = new User(rs.getInt("user.id"), rs.getString("user.name"), rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar")));
-				arrayL.add(new Post(rs.getInt("post.id"), postUser, topic, rs.getDate("post.date").toString(), rs.getString("post.post"), reply));
+				arrayL.add(new Post(rs.getInt("post.id"), postUser, topic, rs.getTimestamp("post.date").toString(), rs.getString("post.post"), reply));
 				//TODO utils.get avatar
 			}
 		}catch(Exception e){

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import util.Utils;
@@ -204,7 +205,32 @@ olusturur.
 	 * @return baslik acma basarili veya degil 1/0
 	 */
 	public Topic createTopic(Topic newtopic) {
-		return null;
+		try {
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO topic VALUES(null , ? , ? , ?)");
+			pst.setInt(1, newtopic.getUser().getId());
+			pst.setTimestamp(2, Timestamp.valueOf( newtopic.getDate()));
+			pst.setString(3, newtopic.getTitle());
+			pst.executeUpdate();
+
+			pst = conn.prepareStatement("SELECT * FROM topic INNER JOIN user ON user.id = topic.userid WHERE topic.id = (SELECT MAX(topic.id) from topic)");
+			ResultSet rs = pst.executeQuery();
+			rs.next();
+
+			User topicUser = new User( rs.getInt("user.id"), rs.getString("user.name"), rs.getString("user.email"), null, Utils.getAvatar( rs.getString("user.avatar")));
+			Topic topic = new Topic(rs.getInt("topic.id"), topicUser, rs.getTimestamp("topic.date").toString() ,rs.getString("topic.title"), null, null);
+
+			pst = conn.prepareStatement("INSERT INTO post VALUES(null , ? , ? , ? , ? , -1)");
+			pst.setInt(1, topic.getId());
+			pst.setInt(2, topicUser.getId());
+			pst.setTimestamp(3, Timestamp.valueOf( topic.getDate()));
+			pst.setString(4, topic.getFirstPost().getPost());
+			pst.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newtopic;
 	}
 
 	/**
@@ -217,6 +243,32 @@ olusturur.
 	 * @return mesaj atma islemi basarili ise 1 degilse 0
 	 */
 	public Post createPost(Post newpost) {
+		PreparedStatement pst;
+		try {
+			pst = conn.prepareStatement("INSERT INTO post VALUES(null , ? , ? , ? , ? , ?)");
+			pst.setInt(1, newpost.getTopic().getId());
+			pst.setInt(2, newpost.getUser().getId());
+			pst.setTimestamp(3, Timestamp.valueOf( newpost.getDate()));
+			pst.setString(4, newpost.getPost());
+
+			if( newpost.getReply() != null )					// Reply null degilse reply id sini database e yaz , null ise idsini -1 olarak yaz.
+				pst.setInt(5, newpost.getReply().getId());
+			else
+				pst.setInt(5, -1);
+
+			pst.executeUpdate();
+
+			pst = conn.prepareStatement("SELECT * FROM post WHERE post.id = (SELECT MAX(post.id) from post)");
+			ResultSet rs = pst.executeQuery();
+			rs.next();
+
+			Post post = new Post(rs.getInt("id"), newpost.getUser(), newpost.getTopic(), rs.getTimestamp("date").toString() , rs.getString("post"), newpost.getReply());
+			return post;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
@@ -231,7 +283,21 @@ olusturur.
 birakabilirsiniz)
 	 */
 	public User[] userList(User user) {
-		return null;
+		ArrayList<User> arrayL = new ArrayList<User>();
+		User [] diziT = null;
+		try{
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM user WHERE NOT id = ?");
+			pst.setInt(1, user.getId());
+
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()){
+				arrayL.add(new User(rs.getInt("user.id"), rs.getString("user.name") , rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar"))));
+			}
+		}catch(Exception e){
+			e.getStackTrace();
+		}
+		diziT = arrayL.toArray(new User[arrayL.size()]);
+		return diziT;
 	}
 
 	/**
@@ -244,6 +310,24 @@ birakabilirsiniz)
 	 * @return basarili 1/ basarisiz 0
 	 */
 	public PrivateMessage sendPM(PrivateMessage newpm) {
+		try {
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO privatemessage VALUES( null , ? , ? , ? , ? )");
+			pst.setInt(1, newpm.getTo().getId());
+			pst.setInt(2, newpm.getFrom().getId());
+			pst.setTimestamp(3, Timestamp.valueOf( newpm.getDate() ));
+			pst.setString(4, newpm.getMessage());
+			pst.executeUpdate();
+
+			pst = conn.prepareStatement("SELECT * FROM privatemessage WHERE id = (SELECT MAX(id) from privatemessage)");
+			ResultSet rs = pst.executeQuery();
+			rs.next();
+
+			PrivateMessage newMessage = new PrivateMessage(rs.getInt("id"), newpm.getTo() , newpm.getFrom() , rs.getTimestamp("date").toString() , rs.getString("message"));
+			return newMessage;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -275,6 +359,24 @@ yazicaksiniz
 	 * @return
 	 */
 	public PrivateMessage[] getPMdetails(User me, User friend) {
+		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
+		try {
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM privatemessage WHERE toid = ? AND fromid = ?");
+			pst.setInt(1, me.getId());
+			pst.setInt(2, friend.getId());
+
+			ResultSet rs = pst.executeQuery();
+			while( rs.next() ) {
+				PrivateMessage pm = new PrivateMessage( rs.getInt("id"), me, friend , rs.getTimestamp("date").toString(), rs.getString("message"));
+				pmList.add(pm);
+			}
+
+			PrivateMessage[] result = pmList.toArray(new PrivateMessage[pmList.size()]);
+			return result;
+		}
+		catch(Exception e) {
+
+		}
 		return null;
 	}
 

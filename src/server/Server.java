@@ -256,11 +256,17 @@ public class Server {
 
 	@SuppressWarnings("unused")
 	private void cmdRECONNECT(Client requester, String input) {
-		// TODO implement reconnection
 		int session = Integer.parseInt(input);
+		// Close and remove the old client
+		clients.get(session).close();
 		clients.remove(session);
+		// Put new client
 		clients.put(session, requester);
-		requester.send(String.format("LOGIN %s\n", session));
+		// Remove duplicate
+		clients.remove(requester.hashCode());
+		// Replace new session id with the old one
+		requester.sessionid = session;
+		requester.send(String.format("RECONNECT %s\n", session));
 	}
 
 	private class Client implements Runnable {

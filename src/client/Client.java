@@ -277,4 +277,16 @@ public class Client {
 	private void cmdSUCCCESS(String input) {
 		gui.showSuccess(input);
 	}
+
+	@SuppressWarnings("unused")
+	private void cmdRECONNECT(String input) {
+		// TODO dustugumu anlamam lazım ki reconnect gondereyim
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdSHUTDOWN(String input) {
+		gui.showError(input);
+		this.close();
+		System.exit(0);
+	}
 }

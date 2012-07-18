@@ -28,8 +28,6 @@ import javax.swing.JScrollPane;
 
 import client.Client;
 
-import Windows.fileBrowser.FileChooser;
-import Windows.fileBrowser.ImageFilter;
 import beans.Post;
 import beans.Topic;
 
@@ -244,7 +242,7 @@ public class MainWindow extends JFrame {
 		this.client.listTopics();
 	}
 
-	//Postlarýn listelendiði componenta post ekler
+	//Postlarï¿½n listelendiï¿½i componenta post ekler
 	public void addPost(Post post) {
 		
 		MessageComponent newComp = new MessageComponent(this.client);

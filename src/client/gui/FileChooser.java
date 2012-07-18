@@ -7,6 +7,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.filechooser.*;
 
+import beans.User;
+
 import util.Utils;
 
 import client.Client;
@@ -32,7 +34,7 @@ public class FileChooser extends JPanel
 		super(new BorderLayout());
 
 		try {
-			UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
 					);
 		} catch (Exception e) { }
 
@@ -51,7 +53,8 @@ public class FileChooser extends JPanel
 		//Process the results.
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			client.getUser().setAvatar( Utils.getAvatar( file.getAbsolutePath()));            
+			User update = new User(client.getUser().getId(), client.getUser().getName(), client.getUser().getEmail(), client.getUser().getPasswd(), Utils.getAvatar( file.getAbsolutePath()));
+			client.updateUser(update);
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please select a picture with '.jpg' or '.jpeg' extension...");

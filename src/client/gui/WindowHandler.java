@@ -9,8 +9,6 @@ import client.Client;
 
 import beans.*;
 
-import Windows.*;
-
 public class WindowHandler {
 	
 	private Client client;

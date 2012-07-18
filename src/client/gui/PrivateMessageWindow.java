@@ -45,6 +45,7 @@ public class PrivateMessageWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public PrivateMessageWindow(Client client) {
+		setTitle("Private Message");
 		
 		try {
 	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()

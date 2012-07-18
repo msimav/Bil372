@@ -1,184 +1,205 @@
--- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Jul 13, 2012 at 07:15 PM
--- Server version: 5.5.22
--- PHP Version: 5.3.10-1ubuntu3.2
+CREATE SCHEMA `dalga` DEFAULT CHARACTER SET utf8 COLLATE utf8_turkish_ci;
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+USE `dalga`;
+
+CREATE  TABLE `dalga`.`User` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
+  `email` VARCHAR(45) NOT NULL ,
+  `passwd` VARCHAR(45) NOT NULL ,
+  `avatar` VARCHAR(120) NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`Topic` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `userid` INT NOT NULL ,
+  `date` DATETIME NULL ,
+  `title` VARCHAR(120) NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_Topic_User` (`userid` ASC) ,
+  CONSTRAINT `fk_Topic_User`
+    FOREIGN KEY (`userid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`Post` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `userid` INT NOT NULL ,
+  `topicid` INT NOT NULL ,
+  `date` DATETIME NOT NULL ,
+  `post` TEXT NOT NULL ,
+  `reply` INT NULL DEFAULT -1 ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_Post_Topic` (`topicid` ASC) ,
+  INDEX `fk_Post_User` (`userid` ASC) ,
+  CONSTRAINT `fk_Post_Topic`
+    FOREIGN KEY (`topicid` )
+    REFERENCES `dalga`.`Topic` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Post_User`
+    FOREIGN KEY (`userid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`Tag` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`PrivateMessage` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `toid` INT NOT NULL ,
+  `fromid` INT NOT NULL ,
+  `date` DATETIME NOT NULL ,
+  `message` TEXT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_PrivateMessage_To` (`toid` ASC) ,
+  INDEX `fk_PrivateMessage_From` (`fromid` ASC) ,
+  CONSTRAINT `fk_PrivateMessage_To`
+    FOREIGN KEY (`toid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_PrivateMessage_From`
+    FOREIGN KEY (`fromid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`LoginLog` (
+  `userid` INT NOT NULL ,
+  `logindate` DATETIME NOT NULL ,
+  `ip` VARCHAR(45) NOT NULL ,
+  INDEX `date` (`logindate` ASC) ,
+  INDEX `fk_LoginLog_User` (`userid` ASC) ,
+  CONSTRAINT `fk_LoginLog_User`
+    FOREIGN KEY (`userid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`TopicTags` (
+  `topicid` INT NOT NULL ,
+  `tagid` INT NOT NULL ,
+  INDEX `fk_TopicTags_Topic` (`topicid` ASC) ,
+  INDEX `fk_TopicTags_Tag` (`tagid` ASC) ,
+  CONSTRAINT `fk_TopicTags_Topic`
+    FOREIGN KEY (`topicid` )
+    REFERENCES `dalga`.`Topic` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_TopicTags_Tag`
+    FOREIGN KEY (`tagid` )
+    REFERENCES `dalga`.`Tag` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE  TABLE `dalga`.`TopicUsers` (
+  `userid` INT NOT NULL ,
+  `topicid` INT NOT NULL ,
+  INDEX `fk_TopicUsers_Topic` (`topicid` ASC) ,
+  INDEX `fk_TopicUsers_User` (`userid` ASC) ,
+  CONSTRAINT `fk_TopicUsers_Topic`
+    FOREIGN KEY (`topicid` )
+    REFERENCES `dalga`.`Topic` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_TopicUsers_User`
+    FOREIGN KEY (`userid` )
+    REFERENCES `dalga`.`User` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `dalga`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `LoginLog`
---
-
-CREATE TABLE IF NOT EXISTS `LoginLog` (
-  `userid` int(11) NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
-  `ip` varchar(45) COLLATE utf8_turkish_ci NOT NULL,
-  KEY `userid` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Post`
---
-
-CREATE TABLE IF NOT EXISTS `Post` (
-  `id` int(11) NOT NULL,
-  `topicid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `post` text COLLATE utf8_turkish_ci NOT NULL,
-  `reply` int(11) DEFAULT NULL,
-  KEY `topicid` (`topicid`,`userid`),
-  KEY `IND2` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `PrivateMessage`
---
-
-CREATE TABLE IF NOT EXISTS `PrivateMessage` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `toid` int(11) NOT NULL,
-  `fromid` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `message` text COLLATE utf8_turkish_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `toid` (`toid`,`fromid`),
-  KEY `IND3` (`fromid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Tag`
---
-
-CREATE TABLE IF NOT EXISTS `Tag` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) COLLATE utf8_turkish_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Topic`
---
-
-CREATE TABLE IF NOT EXISTS `Topic` (
-  `id` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `title` varchar(120) COLLATE utf8_turkish_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `IND1` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `TopicTags`
---
-
-CREATE TABLE IF NOT EXISTS `TopicTags` (
-  `topicid` int(11) NOT NULL,
-  `tagid` int(11) NOT NULL,
-  KEY `topicid` (`topicid`,`tagid`),
-  KEY `IND 4` (`tagid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `TopicUsers`
---
-
-CREATE TABLE IF NOT EXISTS `TopicUsers` (
-  `userid` int(11) NOT NULL,
-  `topicid` int(11) NOT NULL,
-  KEY `userid` (`userid`,`topicid`),
-  KEY `IND5` (`topicid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `User`
---
-
-CREATE TABLE IF NOT EXISTS `User` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) COLLATE utf8_turkish_ci NOT NULL,
-  `email` varchar(45) COLLATE utf8_turkish_ci NOT NULL,
-  `passwd` varchar(45) COLLATE utf8_turkish_ci NOT NULL,
-  `avatar` varchar(120) COLLATE utf8_turkish_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_turkish_ci AUTO_INCREMENT=1 ;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `LoginLog`
---
-ALTER TABLE `LoginLog`
-  ADD CONSTRAINT `LoginLog_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Post`
---
-ALTER TABLE `Post`
-  ADD CONSTRAINT `Post_ibfk_1` FOREIGN KEY (`topicid`) REFERENCES `Topic` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `Post_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `PrivateMessage`
---
-ALTER TABLE `PrivateMessage`
-  ADD CONSTRAINT `PrivateMessage_ibfk_2` FOREIGN KEY (`fromid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `PrivateMessage_ibfk_1` FOREIGN KEY (`toid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Topic`
---
-ALTER TABLE `Topic`
-  ADD CONSTRAINT `Topic_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `TopicTags`
---
-ALTER TABLE `TopicTags`
-  ADD CONSTRAINT `TopicTags_ibfk_2` FOREIGN KEY (`tagid`) REFERENCES `Tag` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `TopicTags_ibfk_1` FOREIGN KEY (`topicid`) REFERENCES `Topic` (`id`);
-
---
--- Constraints for table `TopicUsers`
---
-ALTER TABLE `TopicUsers`
-  ADD CONSTRAINT `TopicUsers_ibfk_2` FOREIGN KEY (`topicid`) REFERENCES `Topic` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `TopicUsers_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `User` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO `User` VALUES (4, 'Kadir Anil Turgut', 'kanilturgut@gmail.com', '12345', NULL);
+INSERT INTO `User` VALUES (3, 'Batuhan Bardak', 'bbardak37@gmail.com', '12345', NULL);
+INSERT INTO `User` VALUES (2, 'Umut Ozan Yildirim', 'uoy1991@gmail.com', '12345', NULL);
+INSERT INTO `User` VALUES (1, 'Mustafa Simav', 'mustafa1991@gmail.com', '12345', NULL);
+INSERT INTO `TopicUsers` VALUES (4, 4);
+INSERT INTO `TopicUsers` VALUES (4, 3);
+INSERT INTO `TopicUsers` VALUES (4, 2);
+INSERT INTO `TopicUsers` VALUES (4, 1);
+INSERT INTO `TopicUsers` VALUES (3, 4);
+INSERT INTO `TopicUsers` VALUES (3, 3);
+INSERT INTO `TopicUsers` VALUES (3, 2);
+INSERT INTO `TopicUsers` VALUES (3, 1);
+INSERT INTO `TopicUsers` VALUES (2, 3);
+INSERT INTO `TopicUsers` VALUES (2, 2);
+INSERT INTO `TopicUsers` VALUES (2, 1);
+INSERT INTO `TopicUsers` VALUES (2, 1);
+INSERT INTO `TopicUsers` VALUES (1, 4);
+INSERT INTO `TopicUsers` VALUES (1, 4);
+INSERT INTO `TopicUsers` VALUES (1, 3);
+INSERT INTO `TopicUsers` VALUES (1, 2);
+INSERT INTO `TopicUsers` VALUES (1, 1);
+INSERT INTO `TopicTags` VALUES (4, 8);
+INSERT INTO `TopicTags` VALUES (4, 2);
+INSERT INTO `TopicTags` VALUES (4, 1);
+INSERT INTO `TopicTags` VALUES (3, 5);
+INSERT INTO `TopicTags` VALUES (3, 4);
+INSERT INTO `TopicTags` VALUES (3, 1);
+INSERT INTO `TopicTags` VALUES (2, 7);
+INSERT INTO `TopicTags` VALUES (2, 3);
+INSERT INTO `TopicTags` VALUES (2, 2);
+INSERT INTO `TopicTags` VALUES (2, 1);
+INSERT INTO `TopicTags` VALUES (1, 6);
+INSERT INTO `TopicTags` VALUES (1, 2);
+INSERT INTO `TopicTags` VALUES (1, 1);
+INSERT INTO `Topic` VALUES (4, 4, '2012-09-02 12:00:00', 'Yapacak is var mi gencler :D');
+INSERT INTO `Topic` VALUES (3, 3, '2012-08-02 15:00:00', 'SQL cok kolay abi..');
+INSERT INTO `Topic` VALUES (2, 2, '2012-08-02 12:01:02', 'Arayuz nasil olmus beyler..');
+INSERT INTO `Topic` VALUES (1, 1, '2012-07-02 12:00:00', 'JSON kullanmak muhtesem beyler..');
+INSERT INTO `Tag` VALUES (8, 'help');
+INSERT INTO `Tag` VALUES (7, 'arayuz');
+INSERT INTO `Tag` VALUES (6, 'json');
+INSERT INTO `Tag` VALUES (5, 'mysql');
+INSERT INTO `Tag` VALUES (4, 'sql');
+INSERT INTO `Tag` VALUES (3, 'swing');
+INSERT INTO `Tag` VALUES (2, 'java');
+INSERT INTO `Tag` VALUES (1, 'bil372');
+INSERT INTO `PrivateMessage` VALUES (2, 4, 2, '2012-07-01 13:13:43', 'tamamdir calisiyor');
+INSERT INTO `PrivateMessage` VALUES (1, 2, 4, '2012-07-01 13:13:12', 'deneme mesajidir..');
+INSERT INTO `Post` VALUES (22, 4, 4, '2012-07-02 16:07:30', 'Yaptim zaten onu baskan', 20);
+INSERT INTO `Post` VALUES (21, 4, 2, '2012-07-02 15:07:00', 'Yap artik birseyler..', 18);
+INSERT INTO `Post` VALUES (20, 4, 1, '2012-07-02 14:05:00', 'Veritabanini doldur abi', 18);
+INSERT INTO `Post` VALUES (19, 4, 3, '2012-07-02 14:04:00', 'Git bir su al gel..', 18);
+INSERT INTO `Post` VALUES (18, 4, 4, '2012-07-02 13:01:00', 'Evet beyler varmidir yapilcak bir is ?', NULL);
+INSERT INTO `Post` VALUES (17, 3, 4, '2012-07-01 12:07:30', 'Sorgulara bakacakmis hoca', 15);
+INSERT INTO `Post` VALUES (16, 3, 4, '2012-07-01 12:07:00', 'Ben bile yazmaya basladim..zor degil yani', 13);
+INSERT INTO `Post` VALUES (15, 3, 2, '2012-07-01 12:05:00', 'Neye bakacakmis hoca ?', 14);
+INSERT INTO `Post` VALUES (14, 3, 1, '2012-07-01 12:04:00', 'Onlar olsun, hoca bakicam demisti', 13);
+INSERT INTO `Post` VALUES (13, 3, 3, '2012-07-01 12:01:00', 'Aslinda kolay ama ek isleri yoruyor', NULL);
+INSERT INTO `Post` VALUES (12, 2, 3, '2012-06-29 12:04:00', 'Bir Alex degil !', 7);
+INSERT INTO `Post` VALUES (11, 2, 4, '2012-06-29 12:03:30', 'Guzel guzel', 7);
+INSERT INTO `Post` VALUES (10, 2, 4, '2012-06-29 12:03:00', 'O odunsu swing gorunusu yok en azindan', 8);
+INSERT INTO `Post` VALUES (9, 2, 2, '2012-06-29 12:02:30', 'Ya iste guzel olsun diye swt dedim', 8);
+INSERT INTO `Post` VALUES (8, 2, 1, '2012-06-29 12:02:00', 'Bastan dedik swing kullan diye', 7);
+INSERT INTO `Post` VALUES (7, 2, 2, '2012-06-29 12:01:00', 'Arayuz hos oldu ', NULL);
+INSERT INTO `Post` VALUES (6, 1, 4, '2012-06-20 12:04:00', 'Eskiden JSON mu vardi beyler :D', 1);
+INSERT INTO `Post` VALUES (5, 1, 4, '2012-06-19 12:03:30', 'Degil mi abi ya..', 4);
+INSERT INTO `Post` VALUES (4, 1, 3, '2012-06-19 12:03:00', 'JSON nedir abi, is cikiyo bosuna :D', 1);
+INSERT INTO `Post` VALUES (3, 1, 1, '2012-07-19 12:02:30', 'return edecegi deger beli hersey belli mis mis', 2);
+INSERT INTO `Post` VALUES (2, 1, 2, '2012-06-18 12:02:00', 'Formati hos aslinda', 1);
+INSERT INTO `Post` VALUES (1, 1, 1, '2012-06-18 12:01:00', 'JSON kullanmak muhtesem beyler', NULL);
+INSERT INTO `LoginLog` VALUES (4, '2012-07-06 18:12:10', '127.168.50.16');
+INSERT INTO `LoginLog` VALUES (1, '2012-07-05 17:12:10', '127.218.11.12');
+INSERT INTO `LoginLog` VALUES (2, '2012-07-01 15:12:10', '117.168.10.1');
+INSERT INTO `LoginLog` VALUES (4, '2012-07-06 18:12:10', '127.168.50.16');
+INSERT INTO `LoginLog` VALUES (1, '2012-07-05 17:12:10', '127.218.11.12');
+INSERT INTO `LoginLog` VALUES (2, '2012-07-01 15:12:10', '117.168.10.1');
+INSERT INTO `LoginLog` VALUES (2, '2012-06-01 18:12:10', '127.168.50.16');
+INSERT INTO `LoginLog` VALUES (4, '2012-06-01 17:12:10', '127.218.11.12');
+INSERT INTO `LoginLog` VALUES (3, '2012-06-01 15:12:10', '117.168.10.1');
+INSERT INTO `LoginLog` VALUES (1, '2012-06-01 13:12:10', '127.168.10.1');

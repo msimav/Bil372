@@ -297,7 +297,7 @@ public class Server {
 	private void cmdUPDATEPASSWD(Client requester, String input) {
 		loger.log(String.format("[%s][PROTOCOL][UPDATEPASSWD] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
 		User[] tuple = Utils.fromJSON(input, User[].class);
-		PrivateMessage[] response = dbhandler.getPMdetails(tuple[0], tuple[1]);
+		User response = dbhandler.updatePasswd(tuple[0], tuple[1]);
 		String proResponse;
 		if(response == null)
 			proResponse = "GETCONVERSATION []\n";

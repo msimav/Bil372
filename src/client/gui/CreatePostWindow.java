@@ -30,6 +30,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.ScrollPaneConstants;
 
 public class CreatePostWindow extends JFrame {
 
@@ -55,13 +56,15 @@ public class CreatePostWindow extends JFrame {
 		setTitle("Create New Post");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 458, 374);
+		setBounds(100, 100, 397, 433);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(20, 10));
 		setContentPane(contentPane);
 
 		JPanel northPanel = new JPanel();
+		northPanel.setBackground(Color.WHITE);
 		northPanel.setForeground(Color.PINK);
 		contentPane.add(northPanel, BorderLayout.NORTH);
 
@@ -71,6 +74,7 @@ public class CreatePostWindow extends JFrame {
 		northPanel.add(topicNameLabel);
 
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBackground(Color.WHITE);
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_centerPanel = new GridBagLayout();
 		gbl_centerPanel.columnWidths = new int[]{461, 0};
@@ -89,6 +93,7 @@ public class CreatePostWindow extends JFrame {
 		centerPanel.add(lblNewLabel, gbc_lblNewLabel);
 
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
@@ -96,10 +101,12 @@ public class CreatePostWindow extends JFrame {
 		centerPanel.add(scrollPane, gbc_scrollPane);
 
 		textArea = new JTextArea();
-		textArea.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		textArea.setLineWrap(true);
+		textArea.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		scrollPane.setViewportView(textArea);
 
 		JPanel southPanel = new JPanel();
+		southPanel.setBackground(Color.WHITE);
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 
 		JButton backButton = new JButton("Back");
@@ -121,16 +128,19 @@ public class CreatePostWindow extends JFrame {
 		southPanel.add(createButton);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.WHITE);
 		contentPane.add(panel, BorderLayout.WEST);
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.WHITE);
 		contentPane.add(panel_1, BorderLayout.EAST);
 	}
 
 	public void createPost() {
-		if( this.textArea.getText() != null ) {
-			Post post = new Post( -1 , this.client.getUser() , this.topic , Utils.getDate() , textArea.getText() , this.reply );
-			this.client.createPost(post);
+		if( this.textArea.getText() != null ) {	
+			
+			Post pst = new Post( -1 , this.client.getUser() , this.topic , Utils.getDate() , textArea.getText() , this.reply );
+			this.client.createPost(pst);
 			this.client.getWindowHandler().closeCreatePostWindow();
 		}
 		else {

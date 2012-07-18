@@ -115,7 +115,7 @@ public class MessageComponent extends JPanel {
 			}
 		});
 		txtrMessagetext.setForeground(Color.DARK_GRAY);
-		txtrMessagetext.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		txtrMessagetext.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		txtrMessagetext.setEditable(false);
 		txtrMessagetext.setText("messageText");
 		txtrMessagetext.setBorder(null);

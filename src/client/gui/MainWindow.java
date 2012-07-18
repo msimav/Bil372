@@ -47,6 +47,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MainWindow extends JFrame {
 
@@ -174,6 +176,14 @@ public class MainWindow extends JFrame {
 		panel_2.setLayout(new BorderLayout(15, 0));
 		
 		searchText = new JTextField();
+		searchText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					search();
+				}
+			}
+		});
 		panel_2.add(searchText, BorderLayout.CENTER);
 		searchText.setColumns(10);
 		
@@ -197,8 +207,21 @@ public class MainWindow extends JFrame {
 		JMenu mnNewMenu_1 = new JMenu("Statistics");
 		menuBar_1.add(mnNewMenu_1);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Topic statistics");
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Post Statistics");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				postChart();
+			}
+		});
 		mnNewMenu_1.add(mntmNewMenuItem_3);
+		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Login Log Statistics");
+		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loginChart();
+			}
+		});
+		mnNewMenu_1.add(mntmNewMenuItem_4);
 		
 		
 		JPanel panel_3 = new JPanel();
@@ -293,7 +316,7 @@ public class MainWindow extends JFrame {
 		if( post.getReply() == null ) {
 			newComp.txtrReplytext.setVisible(false);
 			Dimension d = new Dimension();
-			d.width = 450;
+			d.width = 455;
 			d.height = 100 + newComp.txtrMessagetext.getLineCount() * 20 ;
 			newComp.setMinimumSize(d);
 			newComp.setMaximumSize(d);
@@ -305,7 +328,7 @@ public class MainWindow extends JFrame {
 			newComp.txtrReplytext.setText( String.format("In reply to %s:\n%s", post.getReply().getUser().getName() ,post.getReply().getPost()) );
 			
 			Dimension d = new Dimension();
-			d.width = 450;
+			d.width = 455;
 			d.height = 100 + newComp.txtrMessagetext.getLineCount() * 20 + newComp.txtrReplytext.getLineCount() * 20;
 			newComp.setMinimumSize(d);
 			newComp.setMaximumSize(d);
@@ -385,5 +408,13 @@ public class MainWindow extends JFrame {
 	
 	public void logout() {
 		this.client.disconnect();
+	}
+	
+	public void postChart() {
+		this.client.getWindowHandler().openPostChart();
+	}
+	
+	public void loginChart() {
+		this.client.getWindowHandler().openLoginLogChart();
 	}
 }

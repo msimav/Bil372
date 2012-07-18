@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import javax.swing.JOptionPane;
 
 import client.Client;
+import client.gui.statistics.LoginLogChart;
+import client.gui.statistics.PostOfTopicChart;
 
 import beans.*;
 
@@ -19,6 +21,8 @@ public class WindowHandler {
 	private OpenConversationWindow openConversationWindow;
 	private CreatePostWindow createPostWindow;
 	private ChangePasswordWindow changePassword;
+	private LoginLogChart logChartWindow;
+	private PostOfTopicChart postChartWindow;
 	
 	public WindowHandler( Client client ) {
 		this.client = client;
@@ -149,6 +153,14 @@ public class WindowHandler {
 		catch(Exception e) {
 			
 		}
+	}
+	
+	public void openLoginLogChart() {
+		LoginLogChart.run();
+	}
+	
+	public void openPostChart() {
+		PostOfTopicChart.run();
 	}
 	
 	public void openLoginWindow() {

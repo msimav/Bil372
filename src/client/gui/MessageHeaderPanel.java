@@ -23,6 +23,10 @@ public class MessageHeaderPanel extends JPanel {
 	JLabel dateLabel;
 	JLabel lastMessageLbl;
 	JLabel userName;
+	JPanel westPanel;
+	JPanel panel;
+	JPanel panel_1;
+	JPanel panel_2;
 	public Client client;
 	public User from;
 	
@@ -50,10 +54,18 @@ public class MessageHeaderPanel extends JPanel {
 			public void mouseClicked(MouseEvent arg0) {
 				onClick();
 			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				enter();
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				exit();
+			}
 		});
 		setLayout(new BorderLayout(0, 5));
 		
-		JPanel westPanel = new JPanel();
+		westPanel = new JPanel();
 		westPanel.setBackground(Color.WHITE);
 		add(westPanel, BorderLayout.WEST);
 		
@@ -61,12 +73,12 @@ public class MessageHeaderPanel extends JPanel {
 		iconLabel.setIcon(new ImageIcon("C:\\Users\\Umut\\Desktop\\darth_vader_icon_64x64_by_geo_almighty-d33pmvd.png"));
 		westPanel.add(iconLabel);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
 		panel.add(panel_1, BorderLayout.NORTH);
 		
@@ -75,7 +87,7 @@ public class MessageHeaderPanel extends JPanel {
 		userName.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		userName.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
 		panel.add(panel_2, BorderLayout.CENTER);
 		
@@ -89,6 +101,22 @@ public class MessageHeaderPanel extends JPanel {
 		dateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		add(dateLabel, BorderLayout.SOUTH);
 
+	}
+	
+	public void enter() {
+		this.setBackground(new Color(255, 255, 204));
+		this.panel.setBackground(new Color(255, 255, 204));
+		this.panel_1.setBackground(new Color(255, 255, 204));
+		this.panel_2.setBackground(new Color(255, 255, 204));
+		this.westPanel.setBackground(new Color(255, 255, 204));
+	}
+	
+	public void exit() {
+		this.setBackground(Color.WHITE);
+		this.panel.setBackground(Color.WHITE);
+		this.panel_1.setBackground(Color.WHITE);
+		this.panel_2.setBackground(Color.WHITE);
+		this.westPanel.setBackground(Color.WHITE);
 	}
 
 }

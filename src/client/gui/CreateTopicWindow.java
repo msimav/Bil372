@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 
 import util.Utils;
 import java.awt.Font;
+import javax.swing.ScrollPaneConstants;
 
 public class CreateTopicWindow extends JFrame {
 
@@ -38,19 +39,19 @@ public class CreateTopicWindow extends JFrame {
 	private JTextField tagText;
 	private JTextArea postText;
 	public Client client;
-	
+
 	public CreateTopicWindow(Client client) {
 		try {
-	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()
-	            );
-	    } catch (Exception e) { }
-		
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()
+					);
+		} catch (Exception e) { }
+
 		this.client = client;
-		
+
 		setResizable(false);
 		setTitle("Add Topic");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 456, 384);
+		setBounds(100, 100, 370, 426);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -60,7 +61,7 @@ public class CreateTopicWindow extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		JLabel lblNewLabel = new JLabel("Topic Header:");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
@@ -68,7 +69,7 @@ public class CreateTopicWindow extends JFrame {
 		gbc_lblNewLabel.gridx = 0;
 		gbc_lblNewLabel.gridy = 0;
 		contentPane.add(lblNewLabel, gbc_lblNewLabel);
-		
+
 		headerText = new JTextField();
 		GridBagConstraints gbc_headerText = new GridBagConstraints();
 		gbc_headerText.fill = GridBagConstraints.BOTH;
@@ -77,7 +78,7 @@ public class CreateTopicWindow extends JFrame {
 		gbc_headerText.gridy = 1;
 		contentPane.add(headerText, gbc_headerText);
 		headerText.setColumns(10);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Topic Tags :");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.fill = GridBagConstraints.BOTH;
@@ -85,7 +86,7 @@ public class CreateTopicWindow extends JFrame {
 		gbc_lblNewLabel_1.gridx = 0;
 		gbc_lblNewLabel_1.gridy = 2;
 		contentPane.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		
+
 		tagText = new JTextField();
 		GridBagConstraints gbc_tagText = new GridBagConstraints();
 		gbc_tagText.fill = GridBagConstraints.BOTH;
@@ -94,8 +95,9 @@ public class CreateTopicWindow extends JFrame {
 		gbc_tagText.gridy = 3;
 		contentPane.add(tagText, gbc_tagText);
 		tagText.setColumns(10);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.weighty = 30.0;
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -103,11 +105,12 @@ public class CreateTopicWindow extends JFrame {
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 5;
 		contentPane.add(scrollPane, gbc_scrollPane);
-		
+
 		postText = new JTextArea();
+		postText.setLineWrap(true);
 		postText.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		scrollPane.setViewportView(postText);
-		
+
 		JPanel southPanel = new JPanel();
 		GridBagConstraints gbc_southPanel = new GridBagConstraints();
 		gbc_southPanel.insets = new Insets(0, 0, 5, 0);
@@ -115,7 +118,7 @@ public class CreateTopicWindow extends JFrame {
 		gbc_southPanel.gridx = 0;
 		gbc_southPanel.gridy = 6;
 		contentPane.add(southPanel, gbc_southPanel);
-		
+
 		JButton btnNewButton_1 = new JButton("Add Topic");
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
@@ -124,7 +127,7 @@ public class CreateTopicWindow extends JFrame {
 			}
 		});
 		southPanel.add(btnNewButton_1);
-		
+
 		JLabel lblNewLabel_2 = new JLabel("First Post :");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
@@ -133,7 +136,7 @@ public class CreateTopicWindow extends JFrame {
 		gbc_lblNewLabel_2.gridy = 4;
 		contentPane.add(lblNewLabel_2, gbc_lblNewLabel_2);
 	}
-	
+
 	public void createTopic() {
 		if( tagText.getText() != null && headerText.getText() != null && postText.getText() != null ) {
 			String[] tags = tagText.getText().split(",");
@@ -142,6 +145,7 @@ public class CreateTopicWindow extends JFrame {
 				for(int i = 0 ; i < tags.length ; i++ ) {
 					tagList[i] = new Tag(tags[i]);
 				}
+
 				Topic newTopic = new Topic( -1 , this.client.getUser() , Utils.getDate() , headerText.getText() ,tagList , new Post(-1 , this.client.getUser() , null , Utils.getDate() , postText.getText() , null) );
 				this.client.createTopic(newTopic);
 				this.client.getWindowHandler().closeCreateTopicWindow();
@@ -149,7 +153,7 @@ public class CreateTopicWindow extends JFrame {
 			else {
 				JOptionPane.showMessageDialog(null, "Please enter your tags by separating with comma(,)...");
 			}
-			
+
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please fill out the fields correctly...");

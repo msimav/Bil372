@@ -93,9 +93,9 @@ public class TopicComponent extends JPanel {
 	}
 	
 	public void enter() {
-		this.setBackground(Color.GRAY);
-		this.panel.setBackground(Color.GRAY);
-		this.panel_1.setBackground(Color.GRAY);
+		this.setBackground(new Color(255, 255, 204));
+		this.panel.setBackground(new Color(255, 255, 204));
+		this.panel_1.setBackground(new Color(255, 255, 204));
 	}
 	
 	public void exit() {

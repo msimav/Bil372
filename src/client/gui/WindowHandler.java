@@ -104,6 +104,10 @@ public class WindowHandler {
 		}
 	}	
 	
+	public void newMessage(PrivateMessage pm) {
+		
+	}
+	
 	public void showConversation( PrivateMessage[] pmList ) {
 		if( pmList.length != 0 ) {
 			closeMessageWindow();

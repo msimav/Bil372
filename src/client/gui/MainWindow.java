@@ -51,7 +51,7 @@ import java.awt.event.ActionEvent;
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField searchText;
 	private JPanel leftCenter;
 	private JPanel rightCenter;
 	private JScrollPane scrollPane;
@@ -59,7 +59,7 @@ public class MainWindow extends JFrame {
 	private ArrayList<Topic> topicList;
 	public Topic currentTopic;
 	public Client client;
-	
+	public JLabel statusLabel;
 
 	public static void main(String[] args) {
 		new MainWindow(new Client());
@@ -173,12 +173,18 @@ public class MainWindow extends JFrame {
 		northPanel.add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new BorderLayout(15, 0));
 		
-		textField = new JTextField();
-		panel_2.add(textField, BorderLayout.CENTER);
-		textField.setColumns(10);
+		searchText = new JTextField();
+		panel_2.add(searchText, BorderLayout.CENTER);
+		searchText.setColumns(10);
 		
-		JLabel lblSearch = new JLabel("Search");
-		panel_2.add(lblSearch, BorderLayout.EAST);
+		JButton btnNewButton_3 = new JButton("Search");
+		btnNewButton_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				search();
+			}
+		});
+		panel_2.add(btnNewButton_3, BorderLayout.EAST);
 		
 		
 		JPanel panel_3 = new JPanel();
@@ -242,6 +248,13 @@ public class MainWindow extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Logout");
 		mnNewMenu.add(mntmNewMenuItem_2);
+		
+		statusLabel = new JLabel("New label");
+		statusLabel.setVisible(false);
+		statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		statusLabel.setForeground(new Color(255, 0, 0));
+		statusLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		contentPane.add(statusLabel, BorderLayout.SOUTH);
 		
 		this.topicList = new ArrayList<Topic>();
 		this.client.listTopics();
@@ -345,5 +358,9 @@ public class MainWindow extends JFrame {
 	
 	public void changePassword() {
 		this.client.getWindowHandler().openChangePasswordWindow();
+	}
+	
+	public void search() {
+		this.client.search( this.searchText.getText());
 	}
 }

@@ -31,6 +31,7 @@ import beans.User;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 public class PrivateMessageWindow extends JFrame {
 
@@ -57,11 +58,13 @@ public class PrivateMessageWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 385, 536);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(10, 10));
 		setContentPane(contentPane);
 		
 		JPanel northPanel = new JPanel();
+		northPanel.setBackground(Color.WHITE);
 		contentPane.add(northPanel, BorderLayout.NORTH);
 		
 		fromLabel = new JLabel("Umut Ozan Y\u0131ld\u0131r\u0131m");
@@ -72,6 +75,7 @@ public class PrivateMessageWindow extends JFrame {
 		contentPane.add(scrollPane_1 , BorderLayout.CENTER);
 		
 		centerPanel = new JPanel();
+		centerPanel.setBackground(Color.WHITE);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		scrollPane_1.setViewportView(centerPanel);
 		

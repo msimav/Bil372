@@ -23,6 +23,7 @@ public class PrivateMessagePanel extends JPanel {
 	 * Create the panel.
 	 */
 	public PrivateMessagePanel() {
+		setBackground(Color.WHITE);
 		
 		try {
 	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
@@ -35,6 +36,7 @@ public class PrivateMessagePanel extends JPanel {
 		setLayout(new BorderLayout(5, 5));
 		
 		JPanel westPanel = new JPanel();
+		westPanel.setBackground(Color.WHITE);
 		add(westPanel, BorderLayout.WEST);
 		
 		JLabel avatarLabel = new JLabel("");
@@ -42,6 +44,7 @@ public class PrivateMessagePanel extends JPanel {
 		westPanel.add(avatarLabel);
 		
 		JPanel northPanel = new JPanel();
+		northPanel.setBackground(Color.WHITE);
 		add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		
@@ -50,6 +53,7 @@ public class PrivateMessagePanel extends JPanel {
 		northPanel.add(userName);
 		
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBackground(Color.WHITE);
 		add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
 		
@@ -60,6 +64,7 @@ public class PrivateMessagePanel extends JPanel {
 		centerPanel.add(message);
 		
 		JPanel southPanel = new JPanel();
+		southPanel.setBackground(Color.WHITE);
 		add(southPanel, BorderLayout.SOUTH);
 		southPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -69,6 +74,7 @@ public class PrivateMessagePanel extends JPanel {
 		southPanel.add(dateLabel);
 		
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.WHITE);
 		add(panel_1, BorderLayout.EAST);
 
 	}

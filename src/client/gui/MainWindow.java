@@ -214,6 +214,11 @@ public class MainWindow extends JFrame {
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Change Password");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				changePassword();
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Add/Change Profile Picture");
@@ -335,5 +340,9 @@ public class MainWindow extends JFrame {
 	
 	public void chooseImage() {
 		FileChooser.createAndShowGUI(client);
+	}
+	
+	public void changePassword() {
+		this.client.getWindowHandler().openChangePasswordWindow();
 	}
 }

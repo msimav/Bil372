@@ -1,17 +1,14 @@
 package client.gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import java.awt.GridLayout;
+
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -21,17 +18,13 @@ import java.awt.event.MouseEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
+
 
 import beans.Post;
 import beans.Tag;
 import beans.Topic;
 
 import client.Client;
-
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 

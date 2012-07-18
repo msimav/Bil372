@@ -1,8 +1,6 @@
 package client.gui;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import client.Client;
@@ -20,6 +18,7 @@ public class WindowHandler {
 	private MessageWindow messageWindow;
 	private OpenConversationWindow openConversationWindow;
 	private CreatePostWindow createPostWindow;
+	private ChangePasswordWindow changePassword;
 	
 	public WindowHandler( Client client ) {
 		this.client = client;
@@ -156,6 +155,16 @@ public class WindowHandler {
 	public void closeLoginWindow() {
 		loginWindow.setVisible(false);
 		loginWindow.dispose();
+	}
+	
+	public void openChangePasswordWindow() {
+		changePassword = new ChangePasswordWindow(this.client);
+		changePassword.setVisible(true);
+	}
+	
+	public void closeChangePasswordWindow() {
+		changePassword.setVisible(false);
+		changePassword.dispose();
 	}
 	
 	public void openMainWindow() {

@@ -344,6 +344,23 @@ listeleyeceksiniz burada
 	 * * avatar: mesaji gonderen kullanicinin avatari
 	 */
 	public PrivateMessage[] getPMs(User user) {
+		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
+		try {
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM privatemessage pm INNER JOIN user ON user.id = pm.fromid WHERE pm.toid = ? AND pm.id = (SELECT MAX(id) FROM privatemessage WHERE pm.fromid = fromid) ORDER BY date DESC");
+			pst.setInt(1, user.getId());
+
+			ResultSet rs = pst.executeQuery();
+			while( rs.next() ) {
+				User from = new User(rs.getInt("user.id") , rs.getString("user.name") , rs.getString("user.email") , null , Utils.getAvatar(rs.getString("user.avatar")) );
+				PrivateMessage newMessage = new PrivateMessage( rs.getInt("id") , user , from , rs.getTimestamp("date").toString() , rs.getString("message"));
+				pmList.add(newMessage);
+			}
+
+			return pmList.toArray(new PrivateMessage[pmList.size()]);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -378,6 +395,39 @@ yazicaksiniz
 
 		}
 		return null;
+	}
+
+	public User updateUser( User user ) {		
+		try {
+			User login = this.login(user);
+			if( login != null ) {
+				PreparedStatement pst = conn.prepareStatement("UPDATE user SET name = ? , passwd = ? , avatar = ? WHERE id = ?");
+				pst.setString(1, user.getName());
+				pst.setString(2, user.getPasswd());
+				//pst.setString(3, user.getAvatar());
+				pst.setInt(4,  user.getId());
+				pst.executeUpdate();
+
+				return user;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void loginLog( User user , String ip ) {
+		try {
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO loginlog VALUES( ? , ? , ?)");
+			pst.setInt(1, user.getId());
+			pst.setTimestamp(2, Timestamp.valueOf( Utils.getDate() ));
+			pst.setString(3, ip);
+			pst.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

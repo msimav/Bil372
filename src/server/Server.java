@@ -14,6 +14,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.jws.soap.SOAPBinding.Use;
+
 import beans.Post;
 import beans.PrivateMessage;
 import beans.Topic;
@@ -313,6 +315,20 @@ public class Server {
 		// Replace new session id with the old one
 		requester.sessionid = session;
 		requester.send(String.format("RECONNECT %s\n", session)); // TODO RECONNECT protocol needs more review
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdUPDATEUSER(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][UPDATEUSER] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
+		User update = Utils.fromJSON(input, User.class);
+		User response = dbhandler.updateUser(update);
+		String proResponse;
+		if(response == null)
+			proResponse = "ERROR Changes could not be applied.\n";
+		else
+			proResponse = String.format("UPDATEUSER %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][UPDATEUSER] Requester: %s(%d), Response: %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
 	}
 
 	private class Client implements Runnable {

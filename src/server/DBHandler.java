@@ -223,14 +223,15 @@ olusturur.
 			pst.setInt(2, topic.getId());
 			pst.setInt(1, topicUser.getId());
 			pst.setTimestamp(3, Timestamp.valueOf( topic.getDate()));
-			pst.setString(4, topic.getFirstPost().getPost());
+			pst.setString(4, newtopic.getFirstPost().getPost());
 			pst.executeUpdate();
 
+			return topic;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return newtopic;
+		return null;
 	}
 
 	/**
@@ -406,7 +407,7 @@ yazicaksiniz
 				PreparedStatement pst = conn.prepareStatement("UPDATE User SET name = ? , passwd = ? , avatar = ? WHERE id = ?");
 				pst.setString(1, user.getName());
 				pst.setString(2, user.getPasswd());
-				//pst.setString(3, user.getAvatar());
+				pst.setString(3, Utils.writeImageToFile(user.getAvatar(), user.getEmail()));
 				pst.setInt(4,  user.getId());
 				pst.executeUpdate();
 

@@ -19,7 +19,7 @@ import beans.*;
 public class Client {
 	// TODO tum exceptionlari duzgun bir bicimde handle et
 	// gui bunun icin showError methodu saglasin
-	public static final String server = "";
+	public static final String server = "127.0.0.1";
 	public static final int port = 5001;
 
 	private BufferedReader reader;
@@ -67,6 +67,10 @@ public class Client {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		new Client();
 	}
 
 	private void handleInput(String input) {
@@ -168,6 +172,10 @@ public class Client {
 		send(String.format("GETCONVERSATION %s\n", Utils.toJSON(tuple)));
 	}
 
+	public void updateUser(User update) {
+		send(String.format("UPDATEUSER %s\n", Utils.toJSON(update)));
+	}
+
 	public void createPost(Post newpost) {
 		send(String.format("CREATEPOST %s\n", Utils.toJSON(newpost)));
 	}
@@ -192,6 +200,8 @@ public class Client {
 
 	public void disconnect() {
 		send(String.format("LOGOUT %d\n", sessionid));
+		this.close();
+		System.exit(0);
 	}
 
 	public void reconnect() {
@@ -274,7 +284,7 @@ public class Client {
 	}
 
 	@SuppressWarnings("unused")
-	private void cmdSUCCCESS(String input) {
+	private void cmdSUCCESS(String input) {
 		gui.showSuccess(input);
 	}
 
@@ -288,5 +298,11 @@ public class Client {
 		gui.showError(input);
 		this.close();
 		System.exit(0);
+	}
+
+	@SuppressWarnings("unused")
+	private void cmdUPDATEUSER(String input) {
+		this.user = Utils.fromJSON(input, User.class);
+		gui.showSuccess("Changes have been applied.");
 	}
 }

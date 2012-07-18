@@ -24,7 +24,7 @@ public class Utils {
 	public static String getDateTime() {
 		return new Date().toString();
 	}
-	
+
 	/**
 	 * O anki tarihi doner ve VERITABANI tarafindan kullanilir.
 	 * @return
@@ -159,5 +159,27 @@ public class Utils {
 			return name.substring(index + 1).toLowerCase();
 		else
 			return null;
+	}
+
+	/**
+	 * Kullanicinin yukledigi avatari servera kaydeder.
+	 * @param arr avatarin byte arrayi
+	 * @param email kullanicinin mail adresi
+	 * @return
+	 */
+	public static String writeImageToFile(byte[] arr, String email) {
+		final String destination = "avatar/";
+		String filename = String.format("%s%s.jpg", destination, email.replace('@', '.'));
+		InputStream in = new ByteArrayInputStream(arr);
+		BufferedImage bImageFromConvert = null;
+
+		try {
+			bImageFromConvert = ImageIO.read(in);
+			ImageIO.write(bImageFromConvert, "jpg", new File(filename));
+			return filename;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

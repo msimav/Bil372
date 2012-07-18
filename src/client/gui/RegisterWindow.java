@@ -51,8 +51,6 @@ public class RegisterWindow extends JFrame {
 	    } catch (Exception e) { }
 		
 		this.client = client;
-		
-		setResizable(false);
 		setTitle("Register Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 559, 186);

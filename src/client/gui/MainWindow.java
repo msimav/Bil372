@@ -247,6 +247,11 @@ public class MainWindow extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Logout");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				logout();
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_2);
 		
 		statusLabel = new JLabel("New label");
@@ -362,5 +367,9 @@ public class MainWindow extends JFrame {
 	
 	public void search() {
 		this.client.search( this.searchText.getText());
+	}
+	
+	public void logout() {
+		this.client.disconnect();
 	}
 }

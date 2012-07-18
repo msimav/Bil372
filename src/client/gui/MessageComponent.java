@@ -151,7 +151,7 @@ public class MessageComponent extends JPanel {
 		this.client.getWindowHandler().getCreatePostWindow().reply = this.post;
 		this.client.getWindowHandler().getCreatePostWindow().topic = this.client.getWindowHandler().getMainWindow().currentTopic;
 		this.client.getWindowHandler().getCreatePostWindow().topicNameLabel.setText(this.client.getWindowHandler().getMainWindow().currentTopic.getTitle());
-		this.client.getWindowHandler().getCreatePostWindow().setTitle( "In reply to : " + this.reply.getUser().getName());
+		this.client.getWindowHandler().getCreatePostWindow().setTitle( "In reply to : " + this.post.getUser().getName());
 	}
 
 }

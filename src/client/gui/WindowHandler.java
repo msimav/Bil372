@@ -65,7 +65,7 @@ public class WindowHandler {
 	}
 
 	public void newPost(Post newPost) {
-		if( mainWindow.currentTopic.getTitle().equals(newPost.getTopic().getTitle())) {
+		if( mainWindow.currentTopic.getId() == newPost.getTopic().getId() ) {
 			mainWindow.addPost(newPost);
 			this.mainWindow.statusLabel.setText("There is a new post for the topic : " +  newPost.getTopic().getTitle() );
 			this.mainWindow.statusLabel.setVisible(true);

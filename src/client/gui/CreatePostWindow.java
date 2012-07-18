@@ -129,6 +129,7 @@ public class CreatePostWindow extends JFrame {
 		if( this.textArea.getText() != null ) {
 			Post post = new Post( -1 , this.client.getUser() , this.topic , Utils.getDate() , textArea.getText() , this.reply );
 			this.client.createPost(post);
+			this.client.getWindowHandler().closeCreatePostWindow();
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Please write your post.");

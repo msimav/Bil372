@@ -103,6 +103,16 @@ public class MessageComponent extends JPanel {
 		
 		
 		txtrMessagetext = new JTextArea();		
+		txtrMessagetext.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				enter();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				exit();
+			}
+		});
 		txtrMessagetext.setForeground(Color.DARK_GRAY);
 		txtrMessagetext.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		txtrMessagetext.setEditable(false);
@@ -112,6 +122,16 @@ public class MessageComponent extends JPanel {
 		
 		
 		txtrReplytext = new JTextArea();
+		txtrReplytext.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				enter();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				exit();
+			}
+		});
 		txtrReplytext.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		txtrReplytext.setText("replyText");
 		txtrReplytext.setEditable(false);

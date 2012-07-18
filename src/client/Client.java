@@ -183,6 +183,10 @@ public class Client {
 		send(String.format("UPDATEPASSWD %s\n", Utils.toJSON(tuple)));
 	}
 
+	public void search(String keyword) {
+		send(String.format("SEARCH %s\n", keyword));
+	}
+
 	public void createPost(Post newpost) {
 		send(String.format("CREATEPOST %s\n", Utils.toJSON(newpost)));
 	}

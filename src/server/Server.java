@@ -308,6 +308,19 @@ public class Server {
 	}
 
 	@SuppressWarnings("unused")
+	private void cmdSEARCH(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][SEARCH] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
+		Topic[] response = dbhandler.search(input);
+		String proResponse;
+		if(response == null)
+			proResponse = "ERROR No topic found.\n";
+		else
+			proResponse = String.format("LSTOPIC %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][SEARCH] Requester: %s(%d), Response: %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
+	}
+
+	@SuppressWarnings("unused")
 	private void cmdLOGOUT(Client requester, String input) {
 		loger.log(String.format("[%s][PROTOCOL][LOGOUT] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
 		clients.remove(requester.hashCode());

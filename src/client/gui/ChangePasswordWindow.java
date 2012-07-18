@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import util.Utils;
+
 import beans.User;
 
 import client.Client;
@@ -89,6 +91,7 @@ public class ChangePasswordWindow extends JFrame {
 		changePassword.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				changePassword();
 			}
 		});
 		panel.add(changePassword);
@@ -100,9 +103,9 @@ public class ChangePasswordWindow extends JFrame {
 	
 	public void changePassword() {
 		if( passwordField.getPassword() != null && passwordField_1.getPassword() != null && passwordField_2.getPassword() != null ) {
-			if( this.client.getUser().getPasswd().equals(passwordField.getPassword()) && passwordField_1.getPassword() == passwordField_2.getPassword() ) {
-				User updatedUser = new User(this.client.getUser().getId(), this.client.getUser().getName(), this.client.getUser().getEmail(), new String(passwordField_1.getPassword()), this.client.getUser().getAvatar());
-				//this.client.update(updatedUser);
+			if( this.client.getUser().getPasswd().equals(Utils.md5hash( new String(passwordField.getPassword()))) && new String(passwordField_1.getPassword()).equals(new String(passwordField_2.getPassword()))  ) {
+				User updatedUser = new User(this.client.getUser().getId(), this.client.getUser().getName(), this.client.getUser().getEmail(), Utils.md5hash(new String(passwordField_1.getPassword())), this.client.getUser().getAvatar());
+				this.client.updatePasswd(updatedUser);
 			}
 		}
 		

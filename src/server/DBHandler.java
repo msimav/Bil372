@@ -109,7 +109,7 @@ public class DBHandler {
 			pst.setString(1, newuser.getName());
 			pst.setString(2, newuser.getEmail());
 			pst.setString(3, newuser.getPasswd());
-			pst.setString(4, "default");
+			pst.setString(4, "avatar/default.jpg");
 			// TODO default olan kisma resim eklencek
 			pst.executeUpdate();
 			return newuser;
@@ -139,12 +139,12 @@ ordan ismine ulasin)
 		ArrayList<Topic> arrayL = new ArrayList<Topic>();
 		Topic [] diziT = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM topic INNER JOIN user ON topic.userid = user.id");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Topic INNER JOIN User ON Topic.userid = User.id");
 
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
-				User topicUser = new User(rs.getInt("user.id"), rs.getString("user.name") , rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar")));
-				arrayL.add(new Topic(rs.getInt("topic.id"), topicUser, rs.getTimestamp("topic.date").toString(), rs.getString("topic.title"), null, null));
+				User topicUser = new User(rs.getInt("User.id"), rs.getString("User.name") , rs.getString("User.email"), null, Utils.getAvatar(rs.getString("User.avatar")));
+				arrayL.add(new Topic(rs.getInt("Topic.id"), topicUser, rs.getTimestamp("Topic.date").toString(), rs.getString("Topic.title"), null, null));
 				//TODO utils.get avatar , tagleri getir
 			}
 		}catch(Exception e){
@@ -169,22 +169,22 @@ ordan ismine ulasin)
 		ArrayList<Post> arrayL = new ArrayList<Post>();
 		Post [] diziP = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE topicid = ? ORDER by post.date DESC");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Post INNER JOIN User ON Post.userid = User.id WHERE topicid = ? ORDER by Post.date DESC");
 			pst.setInt(1, topic.getId());
 
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
 				Post reply = null;
-				if(rs.getInt("post.reply") != -1) {
-					PreparedStatement replyrst = conn.prepareStatement("SELECT * FROM post INNER JOIN user ON post.userid = user.id WHERE post.id = ?");
-					replyrst.setInt(1, rs.getInt("post.reply"));
+				if(rs.getInt("Post.reply") != -1) {
+					PreparedStatement replyrst = conn.prepareStatement("SELECT * FROM Post INNER JOIN User ON Post.userid = User.id WHERE Post.id = ?");
+					replyrst.setInt(1, rs.getInt("Post.reply"));
 					ResultSet replyrs = replyrst.executeQuery();
 					replyrs.next(); //there is just one row returned
-					User postUser = new User(replyrs.getInt("user.id"), replyrs.getString("user.name"), null, null, null);
-					reply = new Post(replyrs.getInt("post.id"), postUser, null, replyrs.getDate("post.date").toString(), replyrs.getString("post.post"), null);
+					User postUser = new User(replyrs.getInt("User.id"), replyrs.getString("User.name"), null, null, null);
+					reply = new Post(replyrs.getInt("Post.id"), postUser, null, replyrs.getDate("Post.date").toString(), replyrs.getString("Post.post"), null);
 				}
-				User postUser = new User(rs.getInt("user.id"), rs.getString("user.name"), rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar")));
-				arrayL.add(new Post(rs.getInt("post.id"), postUser, topic, rs.getTimestamp("post.date").toString(), rs.getString("post.post"), reply));
+				User postUser = new User(rs.getInt("User.id"), rs.getString("User.name"), rs.getString("User.email"), null, Utils.getAvatar(rs.getString("User.avatar")));
+				arrayL.add(new Post(rs.getInt("Post.id"), postUser, topic, rs.getTimestamp("Post.date").toString(), rs.getString("Post.post"), reply));
 				//TODO utils.get avatar
 			}
 		}catch(Exception e){
@@ -206,20 +206,20 @@ olusturur.
 	 */
 	public Topic createTopic(Topic newtopic) {
 		try {
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO topic VALUES(null , ? , ? , ?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO Topic VALUES(null , ? , ? , ?)");
 			pst.setInt(1, newtopic.getUser().getId());
 			pst.setTimestamp(2, Timestamp.valueOf( newtopic.getDate()));
 			pst.setString(3, newtopic.getTitle());
 			pst.executeUpdate();
 
-			pst = conn.prepareStatement("SELECT * FROM topic INNER JOIN user ON user.id = topic.userid WHERE topic.id = (SELECT MAX(topic.id) from topic)");
+			pst = conn.prepareStatement("SELECT * FROM Topic INNER JOIN User ON User.id = Topic.userid WHERE Topic.id = (SELECT MAX(Topic.id) from Topic)");
 			ResultSet rs = pst.executeQuery();
 			rs.next();
 
-			User topicUser = new User( rs.getInt("user.id"), rs.getString("user.name"), rs.getString("user.email"), null, Utils.getAvatar( rs.getString("user.avatar")));
-			Topic topic = new Topic(rs.getInt("topic.id"), topicUser, rs.getTimestamp("topic.date").toString() ,rs.getString("topic.title"), null, null);
+			User topicUser = new User( rs.getInt("User.id"), rs.getString("User.name"), rs.getString("User.email"), null, Utils.getAvatar( rs.getString("User.avatar")));
+			Topic topic = new Topic(rs.getInt("Topic.id"), topicUser, rs.getTimestamp("Topic.date").toString() ,rs.getString("Topic.title"), null, null);
 
-			pst = conn.prepareStatement("INSERT INTO post VALUES(null , ? , ? , ? , ? , -1)");
+			pst = conn.prepareStatement("INSERT INTO Post VALUES(null , ? , ? , ? , ? , -1)");
 			pst.setInt(1, topic.getId());
 			pst.setInt(2, topicUser.getId());
 			pst.setTimestamp(3, Timestamp.valueOf( topic.getDate()));
@@ -245,7 +245,7 @@ olusturur.
 	public Post createPost(Post newpost) {
 		PreparedStatement pst;
 		try {
-			pst = conn.prepareStatement("INSERT INTO post VALUES(null , ? , ? , ? , ? , ?)");
+			pst = conn.prepareStatement("INSERT INTO Post VALUES(null , ? , ? , ? , ? , ?)");
 			pst.setInt(1, newpost.getTopic().getId());
 			pst.setInt(2, newpost.getUser().getId());
 			pst.setTimestamp(3, Timestamp.valueOf( newpost.getDate()));
@@ -258,7 +258,7 @@ olusturur.
 
 			pst.executeUpdate();
 
-			pst = conn.prepareStatement("SELECT * FROM post WHERE post.id = (SELECT MAX(post.id) from post)");
+			pst = conn.prepareStatement("SELECT * FROM Post WHERE Post.id = (SELECT MAX(Post.id) from Post)");
 			ResultSet rs = pst.executeQuery();
 			rs.next();
 
@@ -286,12 +286,12 @@ birakabilirsiniz)
 		ArrayList<User> arrayL = new ArrayList<User>();
 		User [] diziT = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM user WHERE NOT id = ?");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM User WHERE NOT id = ?");
 			pst.setInt(1, user.getId());
 
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
-				arrayL.add(new User(rs.getInt("user.id"), rs.getString("user.name") , rs.getString("user.email"), null, Utils.getAvatar(rs.getString("user.avatar"))));
+				arrayL.add(new User(rs.getInt("User.id"), rs.getString("User.name") , rs.getString("User.email"), null, Utils.getAvatar(rs.getString("User.avatar"))));
 			}
 		}catch(Exception e){
 			e.getStackTrace();
@@ -311,14 +311,14 @@ birakabilirsiniz)
 	 */
 	public PrivateMessage sendPM(PrivateMessage newpm) {
 		try {
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO privatemessage VALUES( null , ? , ? , ? , ? )");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO PrivateMessage VALUES( null , ? , ? , ? , ? )");
 			pst.setInt(1, newpm.getTo().getId());
 			pst.setInt(2, newpm.getFrom().getId());
 			pst.setTimestamp(3, Timestamp.valueOf( newpm.getDate() ));
 			pst.setString(4, newpm.getMessage());
 			pst.executeUpdate();
 
-			pst = conn.prepareStatement("SELECT * FROM privatemessage WHERE id = (SELECT MAX(id) from privatemessage)");
+			pst = conn.prepareStatement("SELECT * FROM PrivateMessage WHERE id = (SELECT MAX(id) FROM PrivateMessage)");
 			ResultSet rs = pst.executeQuery();
 			rs.next();
 
@@ -346,12 +346,12 @@ listeleyeceksiniz burada
 	public PrivateMessage[] getPMs(User user) {
 		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
 		try {
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM privatemessage pm INNER JOIN user ON user.id = pm.fromid WHERE pm.toid = ? AND pm.id = (SELECT MAX(id) FROM privatemessage WHERE pm.fromid = fromid) ORDER BY date DESC");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM PrivateMessage pm INNER JOIN User ON User.id = pm.fromid WHERE pm.toid = ? AND pm.id = (SELECT MAX(id) FROM PrivateMessage WHERE pm.fromid = fromid) ORDER BY date DESC");
 			pst.setInt(1, user.getId());
 
 			ResultSet rs = pst.executeQuery();
 			while( rs.next() ) {
-				User from = new User(rs.getInt("user.id") , rs.getString("user.name") , rs.getString("user.email") , null , Utils.getAvatar(rs.getString("user.avatar")) );
+				User from = new User(rs.getInt("User.id") , rs.getString("User.name") , rs.getString("User.email") , null , Utils.getAvatar(rs.getString("User.avatar")) );
 				PrivateMessage newMessage = new PrivateMessage( rs.getInt("id") , user , from , rs.getTimestamp("date").toString() , rs.getString("message"));
 				pmList.add(newMessage);
 			}
@@ -378,7 +378,7 @@ yazicaksiniz
 	public PrivateMessage[] getPMdetails(User me, User friend) {
 		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
 		try {
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM privatemessage WHERE toid = ? AND fromid = ?");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?");
 			pst.setInt(1, me.getId());
 			pst.setInt(2, friend.getId());
 
@@ -401,7 +401,7 @@ yazicaksiniz
 		try {
 			User login = this.login(user);
 			if( login != null ) {
-				PreparedStatement pst = conn.prepareStatement("UPDATE user SET name = ? , passwd = ? , avatar = ? WHERE id = ?");
+				PreparedStatement pst = conn.prepareStatement("UPDATE User SET name = ? , passwd = ? , avatar = ? WHERE id = ?");
 				pst.setString(1, user.getName());
 				pst.setString(2, user.getPasswd());
 				//pst.setString(3, user.getAvatar());
@@ -419,7 +419,7 @@ yazicaksiniz
 
 	public void loginLog( User user , String ip ) {
 		try {
-			PreparedStatement pst = conn.prepareStatement("INSERT INTO loginlog VALUES( ? , ? , ?)");
+			PreparedStatement pst = conn.prepareStatement("INSERT INTO LoginLog VALUES( ? , ? , ?)");
 			pst.setInt(1, user.getId());
 			pst.setTimestamp(2, Timestamp.valueOf( Utils.getDate() ));
 			pst.setString(3, ip);

@@ -147,8 +147,10 @@ public class Server {
 		String proResponse;
 		if(response == null)
 			proResponse = "LOGIN -1 Login Error\n";
-		else
+		else {
 			proResponse = String.format("LOGIN %d %s\n", requester.sessionid, Utils.toJSON(response));
+			dbhandler.loginLog(response, requester.ipaddr());
+		}
 		loger.log(String.format("[%s][PROTOCOL][LOGIN] Requester: %s(%d), Response: %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, proResponse));
 		requester.send(proResponse);
 	}

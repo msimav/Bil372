@@ -219,9 +219,9 @@ olusturur.
 			User topicUser = new User( rs.getInt("User.id"), rs.getString("User.name"), rs.getString("User.email"), null, Utils.getAvatar( rs.getString("User.avatar")));
 			Topic topic = new Topic(rs.getInt("Topic.id"), topicUser, rs.getTimestamp("Topic.date").toString() ,rs.getString("Topic.title"), null, null);
 
-			pst = conn.prepareStatement("INSERT INTO Post VALUES(null , ? , ? , ? , ? , -1)");
-			pst.setInt(1, topic.getId());
-			pst.setInt(2, topicUser.getId());
+			pst = conn.prepareStatement("INSERT INTO Post(userid, topicid, date, post) VALUES (? , ? , ? , ?)");
+			pst.setInt(2, topic.getId());
+			pst.setInt(1, topicUser.getId());
 			pst.setTimestamp(3, Timestamp.valueOf( topic.getDate()));
 			pst.setString(4, topic.getFirstPost().getPost());
 			pst.executeUpdate();
@@ -245,9 +245,9 @@ olusturur.
 	public Post createPost(Post newpost) {
 		PreparedStatement pst;
 		try {
-			pst = conn.prepareStatement("INSERT INTO Post VALUES(null , ? , ? , ? , ? , ?)");
-			pst.setInt(1, newpost.getTopic().getId());
-			pst.setInt(2, newpost.getUser().getId());
+			pst = conn.prepareStatement("INSERT INTO Post(userid, topicid, date, post, reply) VALUES(? , ? , ? , ? , ?)");
+			pst.setInt(2, newpost.getTopic().getId());
+			pst.setInt(1, newpost.getUser().getId());
 			pst.setTimestamp(3, Timestamp.valueOf( newpost.getDate()));
 			pst.setString(4, newpost.getPost());
 

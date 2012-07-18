@@ -48,6 +48,8 @@ public class WindowHandler {
 	
 	public void appendTopic( Topic topic) {
 		mainWindow.addTopic(topic);
+		this.mainWindow.statusLabel.setText("A new topic opened : '" + topic.getTitle() + "'" );
+		this.mainWindow.statusLabel.setVisible(true);
 	}
 	
 	public void showTopicList( Topic[] topicList) {
@@ -65,6 +67,8 @@ public class WindowHandler {
 	public void newPost(Post newPost) {
 		if( mainWindow.currentTopic.getTitle().equals(newPost.getTopic().getTitle())) {
 			mainWindow.addPost(newPost);
+			this.mainWindow.statusLabel.setText("There is a new post for the topic : " +  newPost.getTopic().getTitle() );
+			this.mainWindow.statusLabel.setVisible(true);
 		}
 	}
 	
@@ -103,10 +107,6 @@ public class WindowHandler {
 			openMessageWindow();
 		}
 	}	
-	
-	public void newMessage(PrivateMessage pm) {
-		
-	}
 	
 	public void showConversation( PrivateMessage[] pmList ) {
 		if( pmList.length != 0 ) {

@@ -32,6 +32,8 @@ import beans.User;
 import client.Client;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LoginWindow extends JFrame {
 
@@ -45,7 +47,6 @@ public class LoginWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginWindow(Client client) {
-		
 		try {
 	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
 	            );
@@ -56,28 +57,32 @@ public class LoginWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 561, 174);
 		contentPane = new JPanel();
-		contentPane.setBackground(SystemColor.controlHighlight);
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
+		contentPane.setLayout(new BorderLayout(5, 0));
 		
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBackground(Color.WHITE);
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel westPanel = new JPanel();
+		westPanel.setBackground(Color.WHITE);
 		centerPanel.add(westPanel, BorderLayout.WEST);
 		
-		JLabel lblNewLabel = new JLabel("                 ");
+		JLabel lblNewLabel = new JLabel("         ");
 		westPanel.add(lblNewLabel);
 		
 		JPanel eastPanel = new JPanel();
+		eastPanel.setBackground(Color.WHITE);
 		centerPanel.add(eastPanel, BorderLayout.EAST);
 		
-		JLabel lblNewLabel_1 = new JLabel("                                 ");
+		JLabel lblNewLabel_1 = new JLabel("                                                    ");
 		eastPanel.add(lblNewLabel_1);
 		
 		JPanel center2 = new JPanel();
+		center2.setBackground(Color.WHITE);
 		centerPanel.add(center2, BorderLayout.CENTER);
 		center2.setLayout(new GridLayout(2, 2, 5, 3));
 		
@@ -94,9 +99,18 @@ public class LoginWindow extends JFrame {
 		center2.add(lblNewLabel_5);
 		
 		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					sendUser();
+				}
+			}
+		});
 		center2.add(passwordField);
 		
 		JPanel southPanel = new JPanel();
+		southPanel.setBackground(Color.WHITE);
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 		southPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -119,12 +133,14 @@ public class LoginWindow extends JFrame {
 		southPanel.add(btnRegister);
 		
 		JPanel northPanel = new JPanel();
+		northPanel.setBackground(Color.WHITE);
 		contentPane.add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel lblNewLabel_2 = new JLabel("User Login");
+		lblNewLabel_2.setForeground(Color.DARK_GRAY);
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		lblNewLabel_2.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		northPanel.add(lblNewLabel_2);
 		setMaxSize();
 	}

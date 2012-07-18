@@ -24,6 +24,8 @@ import client.Client;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ChangePasswordWindow extends JFrame {
 
@@ -76,6 +78,14 @@ public class ChangePasswordWindow extends JFrame {
 		panel.add(lblNewLabel_2);
 		
 		passwordField_2 = new JPasswordField();
+		passwordField_2.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					changePassword();
+				}
+			}
+		});
 		panel.add(passwordField_2);
 		
 		JButton cancelButton = new JButton("Cancel");

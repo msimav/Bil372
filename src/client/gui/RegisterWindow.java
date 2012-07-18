@@ -30,6 +30,8 @@ import beans.User;
 import client.Client;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RegisterWindow extends JFrame {
 
@@ -55,28 +57,32 @@ public class RegisterWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 559, 186);
 		contentPane = new JPanel();
-		contentPane.setBackground(SystemColor.controlHighlight);
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBackground(Color.WHITE);
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel westPanel = new JPanel();
+		westPanel.setBackground(Color.WHITE);
 		centerPanel.add(westPanel, BorderLayout.WEST);
 		
 		JLabel lblNewLabel = new JLabel("                 ");
 		westPanel.add(lblNewLabel);
 		
 		JPanel eastPanel = new JPanel();
+		eastPanel.setBackground(Color.WHITE);
 		centerPanel.add(eastPanel, BorderLayout.EAST);
 		
-		JLabel lblNewLabel_1 = new JLabel("                                 ");
+		JLabel lblNewLabel_1 = new JLabel("                                                   ");
 		eastPanel.add(lblNewLabel_1);
 		
 		JPanel center2 = new JPanel();
+		center2.setBackground(Color.WHITE);
 		centerPanel.add(center2, BorderLayout.CENTER);
 		center2.setLayout(new GridLayout(3, 2, 5, 3));
 		
@@ -85,6 +91,14 @@ public class RegisterWindow extends JFrame {
 		center2.add(lblNewLabel_3);
 		
 		nameText = new JTextField();
+		nameText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					register();
+				}
+			}
+		});
 		center2.add(nameText);
 		nameText.setColumns(10);
 		
@@ -93,6 +107,14 @@ public class RegisterWindow extends JFrame {
 		center2.add(lblNewLabel_4);
 		
 		emailText = new JTextField();
+		emailText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					register();
+				}
+			}
+		});
 		center2.add(emailText);
 		emailText.setColumns(10);
 		
@@ -101,9 +123,18 @@ public class RegisterWindow extends JFrame {
 		center2.add(lblNewLabel_5);
 		
 		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if( e.getKeyCode() == KeyEvent.VK_ENTER) {
+					register();
+				}
+			}
+		});
 		center2.add(passwordField);
 		
 		JPanel southPanel = new JPanel();
+		southPanel.setBackground(Color.WHITE);
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 		southPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -126,11 +157,12 @@ public class RegisterWindow extends JFrame {
 		southPanel.add(btnRegister);
 		
 		JPanel northPanel = new JPanel();
+		northPanel.setBackground(Color.WHITE);
 		contentPane.add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel lblNewLabel_2 = new JLabel("User Register");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		northPanel.add(lblNewLabel_2);
 	}

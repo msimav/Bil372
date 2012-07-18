@@ -139,7 +139,7 @@ ordan ismine ulasin)
 		ArrayList<Topic> arrayL = new ArrayList<Topic>();
 		Topic [] diziT = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Topic INNER JOIN User ON Topic.userid = User.id");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Topic INNER JOIN User ON Topic.userid = User.id ORDER BY date DESC");
 
 			ResultSet rs = pst.executeQuery();
 			while(rs.next()){
@@ -169,7 +169,7 @@ ordan ismine ulasin)
 		ArrayList<Post> arrayL = new ArrayList<Post>();
 		Post [] diziP = null;
 		try{
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Post INNER JOIN User ON Post.userid = User.id WHERE topicid = ? ORDER by Post.date DESC");
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Post INNER JOIN User ON Post.userid = User.id WHERE topicid = ? ORDER by Post.date ASC");
 			pst.setInt(1, topic.getId());
 
 			ResultSet rs = pst.executeQuery();
@@ -378,9 +378,11 @@ yazicaksiniz
 	public PrivateMessage[] getPMdetails(User me, User friend) {
 		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
 		try {
-			PreparedStatement pst = conn.prepareStatement("SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?");
+			PreparedStatement pst = conn.prepareStatement("(SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) UNION (SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) ORDER BY date DESC");
 			pst.setInt(1, me.getId());
 			pst.setInt(2, friend.getId());
+			pst.setInt(4, me.getId());
+			pst.setInt(3, friend.getId());
 
 			ResultSet rs = pst.executeQuery();
 			while( rs.next() ) {

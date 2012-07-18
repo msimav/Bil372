@@ -164,8 +164,8 @@ public class MainWindow extends JFrame {
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.ipady = 5;
 		gbc_panel_2.ipadx = 5;
-		gbc_panel_2.weighty = 1.0;
-		gbc_panel_2.weightx = 0.4;
+		gbc_panel_2.weighty = 1.1;
+		gbc_panel_2.weightx = 0.5;
 		gbc_panel_2.insets = new Insets(10, 0, 10, 5);
 		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_2.gridx = 1;
@@ -177,14 +177,28 @@ public class MainWindow extends JFrame {
 		panel_2.add(searchText, BorderLayout.CENTER);
 		searchText.setColumns(10);
 		
+		JPanel panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setHgap(10);
+		panel_2.add(panel, BorderLayout.EAST);
+		
 		JButton btnNewButton_3 = new JButton("Search");
+		panel.add(btnNewButton_3);
 		btnNewButton_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				search();
 			}
 		});
-		panel_2.add(btnNewButton_3, BorderLayout.EAST);
+		
+		JMenuBar menuBar_1 = new JMenuBar();
+		panel.add(menuBar_1);
+		
+		JMenu mnNewMenu_1 = new JMenu("Statistics");
+		menuBar_1.add(mnNewMenu_1);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Topic statistics");
+		mnNewMenu_1.add(mntmNewMenuItem_3);
 		
 		
 		JPanel panel_3 = new JPanel();

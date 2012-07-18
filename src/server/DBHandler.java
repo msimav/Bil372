@@ -154,6 +154,26 @@ ordan ismine ulasin)
 		return diziT;
 	}
 
+	public Topic[] search(String keyword) {
+		ArrayList<Topic> arrayL = new ArrayList<Topic>();
+		Topic [] diziT = null;
+		try{
+			PreparedStatement pst = conn.prepareStatement("SELECT * FROM Topic INNER JOIN User ON Topic.userid = User.id WHERE Topic.title LIKE ? ORDER BY date DESC");
+			pst.setString(1, String.format("%%%s%%", keyword));
+
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()){
+				User topicUser = new User(rs.getInt("User.id"), rs.getString("User.name") , rs.getString("User.email"), null, Utils.getAvatar(rs.getString("User.avatar")));
+				arrayL.add(new Topic(rs.getInt("Topic.id"), topicUser, rs.getTimestamp("Topic.date").toString(), rs.getString("Topic.title"), null, null));
+				//TODO utils.get avatar , tagleri getir
+			}
+		}catch(Exception e){
+			e.getStackTrace();
+		}
+		diziT = arrayL.toArray(new Topic[arrayL.size()]);
+		return diziT;
+	}
+
 	/**
 	 * Bir topic icindeki postlarin listesini doner
 	 * @param args kullanici ve topic idleri {"kullaniciID": 943, "topicID": 53}
@@ -387,7 +407,9 @@ yazicaksiniz
 
 			ResultSet rs = pst.executeQuery();
 			while( rs.next() ) {
-				PrivateMessage pm = new PrivateMessage( rs.getInt("id"), me, friend , rs.getTimestamp("date").toString(), rs.getString("message"));
+				User to = rs.getInt("to") == me.getId() ? me : friend;
+				User from = rs.getInt("from") == me.getId() ? me : friend;
+				PrivateMessage pm = new PrivateMessage( rs.getInt("id"), to, from , rs.getTimestamp("date").toString(), rs.getString("message"));
 				pmList.add(pm);
 			}
 

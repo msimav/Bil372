@@ -310,6 +310,7 @@ public class MainWindow extends JFrame {
 	public void createNewPost() {
 		this.client.getWindowHandler().openCreatePostWindow();
 		this.client.getWindowHandler().getCreatePostWindow().topic = this.currentTopic;
+		this.client.getWindowHandler().getCreatePostWindow().topicNameLabel.setText(this.currentTopic.getTitle());
 	}
 	
 	public void clearTopics() {

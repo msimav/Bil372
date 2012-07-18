@@ -36,7 +36,7 @@ public class CreatePostWindow extends JFrame {
 	public Client client;
 	private JPanel contentPane;
 	private JTextArea textArea;
-	
+	public JLabel topicNameLabel;
 
 	/**
 	 * Create the frame.
@@ -49,11 +49,11 @@ public class CreatePostWindow extends JFrame {
 	    } catch (Exception e) { }
 		
 		this.client = client;
-
+		
 		setTitle("Create New Post");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 547, 369);
+		setBounds(100, 100, 458, 374);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(20, 10));
@@ -63,8 +63,9 @@ public class CreatePostWindow extends JFrame {
 		northPanel.setForeground(Color.PINK);
 		contentPane.add(northPanel, BorderLayout.NORTH);
 
-		JLabel topicNameLabel = new JLabel("Topic Basl\u0131g\u0131");
-		topicNameLabel.setForeground(Color.PINK);
+		topicNameLabel = new JLabel();
+		topicNameLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+		topicNameLabel.setForeground(new Color(153, 0, 0));
 		northPanel.add(topicNameLabel);
 
 		JPanel centerPanel = new JPanel();
@@ -136,6 +137,10 @@ public class CreatePostWindow extends JFrame {
 	
 	public void goBack() {
 		this.client.getWindowHandler().closeCreatePostWindow();
+	}
+	
+	public void setHeader() {
+		this.topicNameLabel.setText( topic.getTitle() );
 	}
 
 }

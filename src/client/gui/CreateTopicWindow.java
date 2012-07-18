@@ -144,6 +144,7 @@ public class CreateTopicWindow extends JFrame {
 				}
 				Topic newTopic = new Topic( -1 , this.client.getUser() , Utils.getDate() , headerText.getText() ,tagList , new Post(-1 , this.client.getUser() , null , Utils.getDate() , postText.getText() , null) );
 				this.client.createTopic(newTopic);
+				this.client.getWindowHandler().closeCreateTopicWindow();
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "Please enter your tags by separating with comma(,)...");

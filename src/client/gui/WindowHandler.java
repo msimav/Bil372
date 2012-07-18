@@ -108,7 +108,7 @@ public class WindowHandler {
 		if( pmList.length != 0 ) {
 			closeMessageWindow();
 			openPmWindow();
-			pmWindow.from = pmList[0].getFrom();
+			pmWindow.from = pmList[0].getFrom().getId() == this.client.getUser().getId() ? pmList[0].getTo() : pmList[0].getFrom();
 			pmWindow.fromLabel.setText( pmWindow.from.getName() );
 			for(PrivateMessage pm : pmList ) {
 				pmWindow.addMessage(pm);

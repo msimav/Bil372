@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.UIManager;
+
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.SystemColor;
@@ -50,11 +52,9 @@ public class LoginWindow extends JFrame {
 	    } catch (Exception e) { }
 		
 		this.client = client;
-		
-		setResizable(false);
 		setTitle("Login Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 559, 155);
+		setBounds(100, 100, 561, 174);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.controlHighlight);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,8 +124,9 @@ public class LoginWindow extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("User Login");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblNewLabel_2.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		northPanel.add(lblNewLabel_2);
+		setMaxSize();
 	}
 	
 	public void sendUser() {
@@ -143,5 +144,12 @@ public class LoginWindow extends JFrame {
 	public void register() {
 		this.client.getWindowHandler().openRegisterWindow();
 		this.client.getWindowHandler().closeLoginWindow();		
+	}
+	
+	public void setMaxSize() {
+		Dimension maximumSize = new Dimension();
+		maximumSize.height = 200;
+		maximumSize.width = 600;
+		this.setMaximumSize(maximumSize);
 	}
 }

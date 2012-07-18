@@ -25,6 +25,8 @@ public class TopicComponent extends JPanel {
 	JLabel userName;
 	JLabel date ;
 	JLabel topicName;
+	JPanel panel;
+	JPanel panel_1;
 	/**
 	 * Create the panel.
 	 */
@@ -42,12 +44,20 @@ public class TopicComponent extends JPanel {
 			public void mouseClicked(MouseEvent arg0) {				
 				listPosts();
 			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				enter();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				exit();
+			}
 		});
 		setBackground(Color.WHITE);
 		setBorder(new MatteBorder(0, 0, 3, 0, (Color) Color.LIGHT_GRAY));
 		setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new BorderLayout(10, 0));
@@ -64,7 +74,7 @@ public class TopicComponent extends JPanel {
 		date.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(date, BorderLayout.CENTER);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
 		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();
 		add(panel_1, BorderLayout.WEST);
@@ -80,6 +90,18 @@ public class TopicComponent extends JPanel {
 	public void listPosts() {
 		this.client.getWindowHandler().getMainWindow().currentTopic = topic;
 		this.client.listPosts(topic);
+	}
+	
+	public void enter() {
+		this.setBackground(Color.GRAY);
+		this.panel.setBackground(Color.GRAY);
+		this.panel_1.setBackground(Color.GRAY);
+	}
+	
+	public void exit() {
+		this.setBackground(Color.WHITE);
+		this.panel.setBackground(Color.WHITE);
+		this.panel_1.setBackground(Color.WHITE);
 	}
 
 }

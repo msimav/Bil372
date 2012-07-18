@@ -399,7 +399,7 @@ yazicaksiniz
 	public PrivateMessage[] getPMdetails(User me, User friend) {
 		ArrayList<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
 		try {
-			PreparedStatement pst = conn.prepareStatement("(SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) UNION (SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) ORDER BY date DESC");
+			PreparedStatement pst = conn.prepareStatement("(SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) UNION (SELECT * FROM PrivateMessage WHERE toid = ? AND fromid = ?) ORDER BY date ASC");
 			pst.setInt(1, me.getId());
 			pst.setInt(2, friend.getId());
 			pst.setInt(4, me.getId());
@@ -407,8 +407,8 @@ yazicaksiniz
 
 			ResultSet rs = pst.executeQuery();
 			while( rs.next() ) {
-				User to = rs.getInt("to") == me.getId() ? me : friend;
-				User from = rs.getInt("from") == me.getId() ? me : friend;
+				User to = rs.getInt("toid") == me.getId() ? me : friend;
+				User from = rs.getInt("fromid") == me.getId() ? me : friend;
 				PrivateMessage pm = new PrivateMessage( rs.getInt("id"), to, from , rs.getTimestamp("date").toString(), rs.getString("message"));
 				pmList.add(pm);
 			}

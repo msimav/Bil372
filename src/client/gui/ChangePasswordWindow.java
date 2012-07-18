@@ -16,7 +16,12 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
 
+import beans.User;
+
 import client.Client;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ChangePasswordWindow extends JFrame {
 
@@ -43,11 +48,13 @@ public class ChangePasswordWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 460, 144);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.WHITE);
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new GridLayout(4, 2, 0, 0));
 		
@@ -69,11 +76,36 @@ public class ChangePasswordWindow extends JFrame {
 		passwordField_2 = new JPasswordField();
 		panel.add(passwordField_2);
 		
-		JButton btnNewButton_1 = new JButton("Cancel");
-		panel.add(btnNewButton_1);
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				close();
+			}
+		});
+		panel.add(cancelButton);
 		
-		JButton btnNewButton = new JButton("Change Password");
-		panel.add(btnNewButton);
+		JButton changePassword = new JButton("Change Password");
+		changePassword.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
+		panel.add(changePassword);
+	}
+	
+	public void close() {
+		this.client.getWindowHandler().closeChangePasswordWindow();
+	}
+	
+	public void changePassword() {
+		if( passwordField.getPassword() != null && passwordField_1.getPassword() != null && passwordField_2.getPassword() != null ) {
+			if( this.client.getUser().getPasswd().equals(passwordField.getPassword()) && passwordField_1.getPassword() == passwordField_2.getPassword() ) {
+				User updatedUser = new User(this.client.getUser().getId(), this.client.getUser().getName(), this.client.getUser().getEmail(), new String(passwordField_1.getPassword()), this.client.getUser().getAvatar());
+				//this.client.update(updatedUser);
+			}
+		}
+		
 	}
 
 }

@@ -49,6 +49,7 @@ public class MessageComponent extends JPanel {
 	JPanel southPanel;
 	JPanel panel_1;
 	JPanel panel_2;
+	private JLabel lblNewLabel_1;
 	
 	public MessageComponent(Client client) {
 		addMouseListener(new MouseAdapter() {
@@ -159,19 +160,29 @@ public class MessageComponent extends JPanel {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		southPanel.add(panel_1);
 		
+		lblNewLabel_1 = new JLabel(" ");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		panel_1.add(lblNewLabel_1);
+		
 		JLabel lblNewLabel = new JLabel(" ");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		panel_1.add(lblNewLabel);
 		
 		dateLabel = new JLabel("10.10.2010");
+		dateLabel.setVisible(false);
 		panel_1.add(dateLabel);
 		
 		
 		btnNewButton = new JButton(" Reply");
+		btnNewButton.setVisible(false);
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				replyPost();
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				enter();
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Umut\\Desktop\\reply_icon.gif"));
@@ -193,6 +204,8 @@ public class MessageComponent extends JPanel {
 	
 	public void enter() {
 		this.setBackground(new Color(255, 255, 204));
+		this.btnNewButton.setVisible(true);
+		this.dateLabel.setVisible(true);
 		this.txtrMessagetext.setBackground(new Color(255, 255, 204));
 		this.txtrReplytext.setBackground(new Color(255, 255, 204));
 		this.leftPanel.setBackground(new Color(255, 255, 204));
@@ -205,6 +218,8 @@ public class MessageComponent extends JPanel {
 	
 	public void exit() {
 		this.setBackground(Color.WHITE);
+		this.btnNewButton.setVisible(false);
+		this.dateLabel.setVisible(false);
 		this.txtrMessagetext.setBackground(Color.WHITE);
 		this.txtrReplytext.setBackground(Color.WHITE);
 		this.leftPanel.setBackground(Color.WHITE);

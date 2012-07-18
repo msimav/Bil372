@@ -38,44 +38,19 @@ public class LoginWindow extends JFrame {
 	private JPasswordField passwordField;
 	public Client client;
 	
-	public Client getClient() {
-		return client;
-	}
-
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginWindow frame = new LoginWindow();
-					frame.setVisible(true);
-					
-					
-				  
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public LoginWindow() {
+	public LoginWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
 		setResizable(false);
 		setTitle("Login Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,11 +100,11 @@ public class LoginWindow extends JFrame {
 		contentPane.add(southPanel, BorderLayout.SOUTH);
 		southPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		JButton btnNewButton = new JButton("Exit");
+		JButton btnNewButton = new JButton("Register");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
+				register();
 			}
 		});
 		southPanel.add(btnNewButton);
@@ -163,5 +138,10 @@ public class LoginWindow extends JFrame {
 			JOptionPane.showMessageDialog(null, "Please enter your email and password correctly...");
 		}
 			
+	}
+	
+	public void register() {
+		this.client.getWindowHandler().openRegisterWindow();
+		this.client.getWindowHandler().closeLoginWindow();		
 	}
 }

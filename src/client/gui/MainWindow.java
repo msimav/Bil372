@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -26,6 +28,8 @@ import javax.swing.JScrollPane;
 
 import client.Client;
 
+import Windows.fileBrowser.FileChooser;
+import Windows.fileBrowser.ImageFilter;
 import beans.Post;
 import beans.Topic;
 
@@ -34,7 +38,17 @@ import java.util.ArrayList;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+
+import util.Utils;
+
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow extends JFrame {
 
@@ -48,32 +62,28 @@ public class MainWindow extends JFrame {
 	public Topic currentTopic;
 	public Client client;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow frame = new MainWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
+	public static void main(String[] args) {
+		new MainWindow(new Client());
+	}
 	/**
 	 * Create the frame.
 	 */
-	public MainWindow() {
+	public MainWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				close();
+			}
+		});
 		setResizable(false);
 		setTitle("Dalga Application Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -209,23 +219,41 @@ public class MainWindow extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Add/Change Profile Picture");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				chooseImage();
+			}
+		});
+		mntmNewMenuItem_1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				chooseImage();
+			}
+		});
+		mntmNewMenuItem_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				chooseImage();
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Logout");
 		mnNewMenu.add(mntmNewMenuItem_2);
 		
-	
+		this.topicList = new ArrayList<Topic>();
+		this.client.listTopics();
 	}
 
 	//Postlarýn listelendiði componenta post ekler
 	public void addPost(Post post) {
 		
-		MessageComponent newComp = new MessageComponent();
+		MessageComponent newComp = new MessageComponent(this.client);
 		newComp.txtrMessagetext.setText( post.getPost() );
 		newComp.userName.setText( post.getUser().getName() );
 		newComp.dateLabel.setText( post.getDate() );
 		newComp.post = post;
-		newComp.post = post.getReply();
+		newComp.reply = post.getReply();
+		newComp.iconLabel.setIcon(Utils.byteTOImage( post.getUser().getAvatar()));
 		
 		if( post.getReply() == null ) {
 			newComp.txtrReplytext.setVisible(false);
@@ -257,7 +285,7 @@ public class MainWindow extends JFrame {
 	public void addTopic( Topic topic ) {
 		topicList.add(topic);
 		
-		TopicComponent newComp = new TopicComponent();
+		TopicComponent newComp = new TopicComponent(this.client);
 		newComp.topicName.setText( topic.getTitle() );
 		newComp.userName.setText( topic.getUser().getName() );
 		newComp.date.setText( topic.getDate() );
@@ -278,6 +306,7 @@ public class MainWindow extends JFrame {
 	
 	public void createNewPost() {
 		this.client.getWindowHandler().openCreatePostWindow();
+		this.client.getWindowHandler().getCreatePostWindow().topic = this.currentTopic;
 	}
 	
 	public void clearTopics() {
@@ -302,5 +331,11 @@ public class MainWindow extends JFrame {
 		this.client.listPrivateMessages();
 	}
 	
-
+	public void close() {
+		this.client.disconnect();
+	}
+	
+	public void chooseImage() {
+		FileChooser.createAndShowGUI(client);
+	}
 }

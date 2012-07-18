@@ -35,34 +35,21 @@ public class OpenConversationWindow extends JFrame {
 	public JComboBox userListComboBox;
 	private User[] userList;
 	private JTextArea textArea;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					OpenConversationWindow frame = new OpenConversationWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public OpenConversationWindow() {
+	public OpenConversationWindow(Client client) {
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
 		setTitle("Send Message");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 421, 422);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

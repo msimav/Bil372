@@ -1,20 +1,28 @@
 package client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import java.awt.GridLayout;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.BoxLayout;
+import java.awt.FlowLayout;
 
 import beans.Post;
 import beans.Tag;
@@ -22,6 +30,11 @@ import beans.Topic;
 
 import client.Client;
 
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
@@ -35,29 +48,18 @@ public class CreateTopicWindow extends JFrame {
 	private JTextField tagText;
 	private JTextArea postText;
 	public Client client;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateTopicWindow frame = new CreateTopicWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public CreateTopicWindow() {
+	
+	public CreateTopicWindow(Client client) {
+		try {
+	        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
 		setResizable(false);
 		setTitle("Add Topic");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 456, 384);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

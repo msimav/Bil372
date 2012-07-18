@@ -36,36 +36,23 @@ public class CreatePostWindow extends JFrame {
 	public Client client;
 	private JPanel contentPane;
 	private JTextArea textArea;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-
-		try {
-			UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-					);
-		} catch (Exception e) { }
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreatePostWindow frame = new CreatePostWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public CreatePostWindow() {
+	public CreatePostWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
 
 		setTitle("Create New Post");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 547, 369);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -106,6 +93,7 @@ public class CreatePostWindow extends JFrame {
 		centerPanel.add(scrollPane, gbc_scrollPane);
 
 		textArea = new JTextArea();
+		textArea.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		scrollPane.setViewportView(textArea);
 
 		JPanel southPanel = new JPanel();

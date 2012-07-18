@@ -39,36 +39,19 @@ public class RegisterWindow extends JFrame {
 	private JPasswordField passwordField;
 	public Client client;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegisterWindow frame = new RegisterWindow();
-					frame.setVisible(true);
-					
-					
-				  
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public RegisterWindow() {
+	public RegisterWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
 		setResizable(false);
 		setTitle("Register Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -33,44 +33,32 @@ public class MessageWindow extends JFrame {
 	JPanel panel;
 	JScrollPane scrollPane;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MessageWindow frame = new MessageWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public MessageWindow() {
+	public MessageWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
 		setTitle("Messages");
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 281, 500);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 20));
 		setContentPane(contentPane);
 		
 		JLabel lblNewLabel = new JLabel("Messages");
-		lblNewLabel.setForeground(new Color(47, 79, 79));
-		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		lblNewLabel.setForeground(Color.BLACK);
+		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblNewLabel, BorderLayout.NORTH);
 		
@@ -78,6 +66,8 @@ public class MessageWindow extends JFrame {
 		contentPane.add(scrollPane , BorderLayout.CENTER); 
 		
 		panel = new JPanel();
+		panel.setBorder(null);
+		panel.setBackground(Color.WHITE);
 		scrollPane.setViewportView(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
@@ -91,14 +81,16 @@ public class MessageWindow extends JFrame {
 		contentPane.add(btnNewMessage, BorderLayout.SOUTH);
 		
 		panel_1 = new JPanel();
+		panel_1.setBackground(Color.WHITE);
 		contentPane.add(panel_1, BorderLayout.WEST);
 		
 		panel_2 = new JPanel();
+		panel_2.setBackground(Color.WHITE);
 		contentPane.add(panel_2, BorderLayout.EAST);
 	}
 	
 	public void addMessageComponent( PrivateMessage message ) {
-		MessageHeaderPanel newPanel = new MessageHeaderPanel();
+		MessageHeaderPanel newPanel = new MessageHeaderPanel(this.client);
 		newPanel.userName.setText(message.getFrom().getName());
 		newPanel.lastMessageLbl.setText(message.getMessage());
 		newPanel.dateLabel.setText(message.getDate());

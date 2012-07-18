@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.BoxLayout;
+import javax.swing.UIManager;
+
 import java.awt.Font;
 import javax.swing.JTextArea;
 import javax.swing.border.MatteBorder;
@@ -16,10 +18,19 @@ public class PrivateMessagePanel extends JPanel {
 
 	JLabel dateLabel;
 	JTextArea message;
+	public JLabel userName;
 	/**
 	 * Create the panel.
 	 */
 	public PrivateMessagePanel() {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		
+		
 		setBorder(new MatteBorder(0, 0, 3, 0, (Color) new Color(0, 0, 0)));
 		setLayout(new BorderLayout(5, 5));
 		
@@ -34,7 +45,7 @@ public class PrivateMessagePanel extends JPanel {
 		add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		
-		JLabel userName = new JLabel("Umut Ozan Y\u0131ld\u0131r\u0131m");
+		userName = new JLabel("Umut Ozan Y\u0131ld\u0131r\u0131m");
 		userName.setFont(new Font("Segoe UI", Font.BOLD, 12));
 		northPanel.add(userName);
 		

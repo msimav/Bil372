@@ -40,33 +40,20 @@ public class PrivateMessageWindow extends JFrame {
 	public User from;
 	private JTextArea message;
 	public Client client;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		try {
-	        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
-	            );
-	    } catch (Exception e) { }
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PrivateMessageWindow frame = new PrivateMessageWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	public JLabel fromLabel;
 	/**
 	 * Create the frame.
 	 */
-	public PrivateMessageWindow() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public PrivateMessageWindow(Client client) {
+		
+		try {
+	        UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName()
+	            );
+	    } catch (Exception e) { }
+		
+		this.client = client;
+		
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 385, 536);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -76,9 +63,9 @@ public class PrivateMessageWindow extends JFrame {
 		JPanel northPanel = new JPanel();
 		contentPane.add(northPanel, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("Umut Ozan Y\u0131ld\u0131r\u0131m");
-		lblNewLabel.setFont(new Font("Calibri", Font.BOLD, 17));
-		northPanel.add(lblNewLabel);
+		fromLabel = new JLabel("Umut Ozan Y\u0131ld\u0131r\u0131m");
+		fromLabel.setFont(new Font("Calibri", Font.BOLD, 17));
+		northPanel.add(fromLabel);
 		
 		scrollPane_1 = new JScrollPane();
 		contentPane.add(scrollPane_1 , BorderLayout.CENTER);
@@ -127,6 +114,7 @@ public class PrivateMessageWindow extends JFrame {
 		PrivateMessagePanel newComp = new PrivateMessagePanel();
 		newComp.message.setText(message.getMessage());
 		newComp.dateLabel.setText(message.getDate());
+		newComp.userName.setText(message.getFrom().getName());
 		
 		Dimension maximumSize = new Dimension();
 		maximumSize.width = scrollPane_1.getWidth() - 20;
@@ -138,7 +126,6 @@ public class PrivateMessageWindow extends JFrame {
 		
 		
 		newComp.setMinimumSize(maximumSize);
-		//newComp.setMaximumSize(maximumSize);
 		newComp.setPreferredSize(maximumSize);
 
 		centerPanel.add(newComp);

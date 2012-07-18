@@ -176,6 +176,13 @@ public class Client {
 		send(String.format("UPDATEUSER %s\n", Utils.toJSON(update)));
 	}
 
+	public void updatePasswd(User newuser) {
+		User[] tuple = new User[2];
+		tuple[0] = this.user;
+		tuple[1] = newuser;
+		send(String.format("UPDATEPASSWD %s\n", Utils.toJSON(tuple)));
+	}
+
 	public void createPost(Post newpost) {
 		send(String.format("CREATEPOST %s\n", Utils.toJSON(newpost)));
 	}

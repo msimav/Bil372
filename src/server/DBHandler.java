@@ -64,7 +64,7 @@ public class DBHandler {
 
 			ResultSet rs = pst.executeQuery();
 			if(rs.next())
-				return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), null, Utils.getAvatar(rs.getString("avatar")));
+				return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("passwd"), Utils.getAvatar(rs.getString("avatar")));
 			else
 				return null;
 
@@ -404,14 +404,31 @@ yazicaksiniz
 		try {
 			User login = this.login(user);
 			if( login != null ) {
-				PreparedStatement pst = conn.prepareStatement("UPDATE User SET name = ? , passwd = ? , avatar = ? WHERE id = ?");
+				PreparedStatement pst = conn.prepareStatement("UPDATE User SET name = ? , avatar = ? WHERE id = ?");
 				pst.setString(1, user.getName());
-				pst.setString(2, user.getPasswd());
-				pst.setString(3, Utils.writeImageToFile(user.getAvatar(), user.getEmail()));
-				pst.setInt(4,  user.getId());
+				pst.setString(2, Utils.writeImageToFile(user.getAvatar(), user.getEmail()));
+				pst.setInt(3,  user.getId());
 				pst.executeUpdate();
 
 				return user;
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public User updatePasswd(User login, User update) {
+		try {
+			User response = this.login(login);
+			if( response != null ) {
+				PreparedStatement pst = conn.prepareStatement("UPDATE User SET passwd = ? WHERE id = ?");
+				pst.setString(1, update.getPasswd());
+				pst.setInt(2,  login.getId());
+				pst.executeUpdate();
+
+				return update;
 			}
 		}
 		catch(Exception e) {

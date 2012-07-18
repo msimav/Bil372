@@ -294,6 +294,20 @@ public class Server {
 	}
 
 	@SuppressWarnings("unused")
+	private void cmdUPDATEPASSWD(Client requester, String input) {
+		loger.log(String.format("[%s][PROTOCOL][UPDATEPASSWD] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
+		User[] tuple = Utils.fromJSON(input, User[].class);
+		PrivateMessage[] response = dbhandler.getPMdetails(tuple[0], tuple[1]);
+		String proResponse;
+		if(response == null)
+			proResponse = "GETCONVERSATION []\n";
+		else
+			proResponse = String.format("UPDATEUSER %s\n", Utils.toJSON(response));
+		loger.log(String.format("[%s][PROTOCOL][UPDATEPASSWD] Requester: %s(%d), Response: %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, proResponse));
+		requester.send(proResponse);
+	}
+
+	@SuppressWarnings("unused")
 	private void cmdLOGOUT(Client requester, String input) {
 		loger.log(String.format("[%s][PROTOCOL][LOGOUT] Requester: %s(%d), Input %s\n", Utils.getDateTime(), requester.ipaddr(), requester.sessionid, input));
 		clients.remove(requester.hashCode());

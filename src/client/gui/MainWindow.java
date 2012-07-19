@@ -85,7 +85,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 		setResizable(false);
-		setTitle("Dalga Application Window");
+		setTitle("Dalga");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 999, 635);
 		contentPane = new JPanel();

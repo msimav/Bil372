@@ -370,11 +370,13 @@ public class MainWindow extends JFrame {
 	
 	public void clearTopics() {
 		leftCenter.removeAll();
+		this.repaint();
 		leftCenter.revalidate();
 	}
 	
 	public void clearPosts() {
 		rightCenter.removeAll();
+		this.repaint();
 		rightCenter.revalidate();
 	}
 	
@@ -404,6 +406,7 @@ public class MainWindow extends JFrame {
 	
 	public void search() {
 		this.client.search( this.searchText.getText());
+		this.revalidate();
 	}
 	
 	public void logout() {

@@ -104,6 +104,7 @@ public class MessageComponent extends JPanel {
 		
 		
 		txtrMessagetext = new JTextArea();		
+		txtrMessagetext.setLineWrap(true);
 		txtrMessagetext.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -123,6 +124,7 @@ public class MessageComponent extends JPanel {
 		
 		
 		txtrReplytext = new JTextArea();
+		txtrReplytext.setLineWrap(true);
 		txtrReplytext.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {

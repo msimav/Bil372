@@ -317,7 +317,7 @@ public class MainWindow extends JFrame {
 			newComp.txtrReplytext.setVisible(false);
 			Dimension d = new Dimension();
 			d.width = 455;
-			d.height = 100 + newComp.txtrMessagetext.getLineCount() * 20 ;
+			d.height = 150 + newComp.txtrMessagetext.getLineCount() * 20 ;
 			newComp.setMinimumSize(d);
 			newComp.setMaximumSize(d);
 			newComp.setPreferredSize(d);
@@ -329,7 +329,7 @@ public class MainWindow extends JFrame {
 			
 			Dimension d = new Dimension();
 			d.width = 455;
-			d.height = 100 + newComp.txtrMessagetext.getLineCount() * 20 + newComp.txtrReplytext.getLineCount() * 20;
+			d.height = 150 + newComp.txtrMessagetext.getLineCount() * 20 + newComp.txtrReplytext.getLineCount() * 20;
 			newComp.setMinimumSize(d);
 			newComp.setMaximumSize(d);
 			newComp.setPreferredSize(d);
